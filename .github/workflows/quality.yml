@@ -30,9 +30,13 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install -e ".[dev]"
 
+    - name: Debug - Show Black diff for sqlite_store.py
+      run: |
+        black --diff --line-length=100 --target-version=py39 src/socratic_knowledge/storage/sqlite_store.py || true
+
     - name: Check formatting with Black
       run: |
-        black --check src/socratic_knowledge/ tests/ examples/
+        black --check --line-length=100 --target-version=py39 src/socratic_knowledge/ tests/ examples/
 
     - name: Lint with Ruff
       run: |
