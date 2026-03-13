@@ -11,9 +11,9 @@ from .rag_integration import KnowledgeRAGIntegration
 class SearchMode(Enum):
     """Search modes for retrieval."""
 
-    KEYWORD = "keyword"          # Full-text search only (FTS5)
-    SEMANTIC = "semantic"        # Semantic search only (RAG)
-    HYBRID = "hybrid"            # Combined keyword + semantic
+    KEYWORD = "keyword"  # Full-text search only (FTS5)
+    SEMANTIC = "semantic"  # Semantic search only (RAG)
+    HYBRID = "hybrid"  # Combined keyword + semantic
 
 
 class SearchEngine:
@@ -64,29 +64,19 @@ class SearchEngine:
             ValueError: If semantic search requested but RAG not available
         """
         if mode == SearchMode.KEYWORD:
-            return self._keyword_search(
-                tenant_id, query, top_k, collection_id
-            )
+            return self._keyword_search(tenant_id, query, top_k, collection_id)
 
         if mode == SearchMode.SEMANTIC:
             if not self.rag:
-                raise ValueError(
-                    "Semantic search requires RAG integration"
-                )
-            return self._semantic_search(
-                tenant_id, query, top_k, collection_id
-            )
+                raise ValueError("Semantic search requires RAG integration")
+            return self._semantic_search(tenant_id, query, top_k, collection_id)
 
         if mode == SearchMode.HYBRID:
             if not self.rag:
                 # Fall back to keyword search if RAG unavailable
-                return self._keyword_search(
-                    tenant_id, query, top_k, collection_id
-                )
+                return self._keyword_search(tenant_id, query, top_k, collection_id)
 
-            return self._hybrid_search(
-                tenant_id, query, top_k, collection_id
-            )
+            return self._hybrid_search(tenant_id, query, top_k, collection_id)
 
         raise ValueError(f"Unknown search mode: {mode}")
 
@@ -117,10 +107,7 @@ class SearchEngine:
 
         # Filter by collection if specified
         if collection_id:
-            results = [
-                item for item in results
-                if item.collection_id == collection_id
-            ]
+            results = [item for item in results if item.collection_id == collection_id]
 
         return results[:top_k]
 
@@ -172,12 +159,8 @@ class SearchEngine:
             List[KnowledgeItem]: Combined top results
         """
         # Get results from both search types
-        keyword_results = self._keyword_search(
-            tenant_id, query, top_k * 2, collection_id
-        )
-        semantic_results = self._semantic_search(
-            tenant_id, query, top_k * 2, collection_id
-        )
+        keyword_results = self._keyword_search(tenant_id, query, top_k * 2, collection_id)
+        semantic_results = self._semantic_search(tenant_id, query, top_k * 2, collection_id)
 
         # Combine and deduplicate by item ID
         seen = set()

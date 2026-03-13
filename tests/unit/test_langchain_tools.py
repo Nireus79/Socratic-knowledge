@@ -44,11 +44,13 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         search_tool = tools._search_knowledge_tool()
 
-        result = search_tool.invoke({
-            "tenant_id": "t1",
-            "query": "test",
-            "top_k": 10,
-        })
+        result = search_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "query": "test",
+                "top_k": 10,
+            }
+        )
 
         assert isinstance(result, str)
         assert "Test" in result
@@ -62,11 +64,13 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         search_tool = tools._search_knowledge_tool()
 
-        result = search_tool.invoke({
-            "tenant_id": "t1",
-            "query": "xyz",
-            "top_k": 10,
-        })
+        result = search_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "query": "xyz",
+                "top_k": 10,
+            }
+        )
 
         assert "No results found" in result
 
@@ -83,11 +87,13 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         search_tool = tools._semantic_search_tool()
 
-        result = search_tool.invoke({
-            "tenant_id": "t1",
-            "query": "test",
-            "top_k": 5,
-        })
+        result = search_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "query": "test",
+                "top_k": 5,
+            }
+        )
 
         assert isinstance(result, str)
         assert "Test" in result
@@ -109,10 +115,12 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         get_tool = tools._get_item_tool()
 
-        result = get_tool.invoke({
-            "tenant_id": "t1",
-            "item_id": "item_1",
-        })
+        result = get_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "item_id": "item_1",
+            }
+        )
 
         assert isinstance(result, str)
         assert "Test" in result
@@ -126,10 +134,12 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         get_tool = tools._get_item_tool()
 
-        result = get_tool.invoke({
-            "tenant_id": "t1",
-            "item_id": "nonexistent",
-        })
+        result = get_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "item_id": "nonexistent",
+            }
+        )
 
         assert "not found" in result
 
@@ -143,11 +153,13 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         perm_tool = tools._check_permissions_tool()
 
-        result = perm_tool.invoke({
-            "tenant_id": "t1",
-            "user_id": "user1",
-            "item_id": "item_1",
-        })
+        result = perm_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "user_id": "user1",
+                "item_id": "item_1",
+            }
+        )
 
         assert isinstance(result, str)
         assert "Permissions" in result
@@ -170,10 +182,12 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         audit_tool = tools._get_audit_log_tool()
 
-        result = audit_tool.invoke({
-            "tenant_id": "t1",
-            "limit": 10,
-        })
+        result = audit_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "limit": 10,
+            }
+        )
 
         assert isinstance(result, str)
         assert "user1" in result
@@ -187,10 +201,12 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         audit_tool = tools._get_audit_log_tool()
 
-        result = audit_tool.invoke({
-            "tenant_id": "t1",
-            "limit": 10,
-        })
+        result = audit_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "limit": 10,
+            }
+        )
 
         assert "No audit events" in result
 
@@ -224,14 +240,18 @@ class TestSocraticKnowledgeTools:
 
         tools = SocraticKnowledgeTools(knowledge_manager=km)
 
-        search_result = tools._search_knowledge_tool().invoke({
-            "tenant_id": "t1",
-            "query": "test",
-        })
-        get_result = tools._get_item_tool().invoke({
-            "tenant_id": "t1",
-            "item_id": "item_1",
-        })
+        search_result = tools._search_knowledge_tool().invoke(
+            {
+                "tenant_id": "t1",
+                "query": "test",
+            }
+        )
+        get_result = tools._get_item_tool().invoke(
+            {
+                "tenant_id": "t1",
+                "item_id": "item_1",
+            }
+        )
 
         assert "Test" in search_result
         assert "Test" in get_result
@@ -247,9 +267,11 @@ class TestSocraticKnowledgeTools:
         audit_tool = tools._get_audit_log_tool()
 
         # Call with only required parameter
-        result = audit_tool.invoke({
-            "tenant_id": "t1",
-        })
+        result = audit_tool.invoke(
+            {
+                "tenant_id": "t1",
+            }
+        )
 
         # Should use default limit
         call_args = km.get_audit_log.call_args
@@ -275,10 +297,12 @@ class TestSocraticKnowledgeTools:
         tools = SocraticKnowledgeTools(knowledge_manager=km)
         search_tool = tools._search_knowledge_tool()
 
-        result = search_tool.invoke({
-            "tenant_id": "t1",
-            "query": "test",
-        })
+        result = search_tool.invoke(
+            {
+                "tenant_id": "t1",
+                "query": "test",
+            }
+        )
 
         # Check formatting
         assert "1. **First**" in result

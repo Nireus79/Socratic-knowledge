@@ -114,11 +114,13 @@ class VersionHistory:
         """
         timeline = []
         for version in versions:
-            timeline.append({
-                "version": version.version_number,
-                "timestamp": version.created_at.isoformat(),
-                "author": version.created_by,
-                "message": version.change_message,
-                "title": version.title,
-            })
+            timeline.append(
+                {
+                    "version": version.version_number,
+                    "timestamp": version.created_at.isoformat(),
+                    "author": version.created_by,
+                    "message": version.change_message,
+                    "title": version.title,
+                }
+            )
         return timeline

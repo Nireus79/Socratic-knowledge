@@ -106,6 +106,7 @@ class TestOptimisticLockManager:
 
         # Wait for lock to expire
         import time
+
         time.sleep(0.1)
 
         count = manager.cleanup_expired_locks()
@@ -141,6 +142,7 @@ class TestOptimisticLockManager:
 
         # Token should expire immediately
         import time
+
         time.sleep(0.1)
 
         assert not token.is_valid()
@@ -249,9 +251,7 @@ class TestConflictDetector:
     def test_get_conflict(self):
         """Test retrieving a conflict."""
         detector = ConflictDetector()
-        original = detector.detect_version_conflict(
-            "item_1", "user1", 1, 2
-        )
+        original = detector.detect_version_conflict("item_1", "user1", 1, 2)
 
         retrieved = detector.get_conflict(original.conflict_id)
         assert retrieved.conflict_id == original.conflict_id
@@ -275,9 +275,7 @@ class TestConflictDetector:
     def test_resolve_conflict(self):
         """Test resolving a conflict."""
         detector = ConflictDetector()
-        conflict = detector.detect_version_conflict(
-            "item_1", "user1", 1, 2
-        )
+        conflict = detector.detect_version_conflict("item_1", "user1", 1, 2)
 
         assert detector.resolve_conflict(
             conflict.conflict_id,
@@ -336,9 +334,7 @@ class TestConflictDetector:
     def test_conflict_serialization(self):
         """Test conflict to_dict serialization."""
         detector = ConflictDetector()
-        conflict = detector.detect_version_conflict(
-            "item_1", "user1", 1, 2
-        )
+        conflict = detector.detect_version_conflict("item_1", "user1", 1, 2)
 
         data = conflict.to_dict()
         assert data["conflict_type"] == "version_conflict"

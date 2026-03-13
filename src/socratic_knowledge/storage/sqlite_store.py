@@ -138,9 +138,7 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
             conn.execute(
                 "CREATE INDEX IF NOT EXISTS idx_collections_parent ON collections(parent_id)"
             )
-            conn.execute(
-                "CREATE INDEX IF NOT EXISTS idx_versions_item ON versions(item_id)"
-            )
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_versions_item ON versions(item_id)")
 
             # Full-text search index using FTS5
             try:
@@ -199,9 +197,7 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
 
         return item
 
-    def get_item(
-        self, item_id: str, tenant_id: str
-    ) -> Optional[KnowledgeItem]:
+    def get_item(self, item_id: str, tenant_id: str) -> Optional[KnowledgeItem]:
         """Get item with tenant isolation (security)."""
         with sqlite3.connect(str(self.db_path)) as conn:
             conn.row_factory = sqlite3.Row
@@ -265,9 +261,7 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
 
         return item
 
-    def delete_item(
-        self, item_id: str, tenant_id: str, soft: bool = True
-    ) -> bool:
+    def delete_item(self, item_id: str, tenant_id: str, soft: bool = True) -> bool:
         """Delete item (soft delete by default)."""
         with sqlite3.connect(str(self.db_path)) as conn:
             if soft:

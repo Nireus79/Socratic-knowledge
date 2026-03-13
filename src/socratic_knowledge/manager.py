@@ -335,8 +335,7 @@ class KnowledgeManager:
         """
         if not self.rag:
             raise ValueError(
-                "Semantic search requires RAG integration. "
-                "Enable with enable_rag=True"
+                "Semantic search requires RAG integration. " "Enable with enable_rag=True"
             )
 
         return self.rag.semantic_search(
@@ -730,9 +729,7 @@ class KnowledgeManager:
         Returns:
             LockToken: Lock token for validation
         """
-        return self.lock_manager.acquire_lock(
-            item_id, user_id, current_version
-        )
+        return self.lock_manager.acquire_lock(item_id, user_id, current_version)
 
     def validate_edit_lock(
         self,
@@ -754,9 +751,7 @@ class KnowledgeManager:
         Raises:
             ValueError: If conflict detected
         """
-        return self.lock_manager.validate_lock(
-            item_id, user_id, current_version
-        )
+        return self.lock_manager.validate_lock(item_id, user_id, current_version)
 
     def release_edit_lock(self, item_id: str) -> bool:
         """

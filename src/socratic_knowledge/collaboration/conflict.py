@@ -9,20 +9,20 @@ from typing import Any, Dict, Optional
 class ConflictType(Enum):
     """Types of conflicts."""
 
-    VERSION_CONFLICT = "version_conflict"          # Version mismatch
-    CONTENT_CONFLICT = "content_conflict"          # Simultaneous edits
-    LOCK_CONFLICT = "lock_conflict"                # Lock held by another user
-    PERMISSION_CONFLICT = "permission_conflict"    # Permission changed
+    VERSION_CONFLICT = "version_conflict"  # Version mismatch
+    CONTENT_CONFLICT = "content_conflict"  # Simultaneous edits
+    LOCK_CONFLICT = "lock_conflict"  # Lock held by another user
+    PERMISSION_CONFLICT = "permission_conflict"  # Permission changed
 
 
 class ConflictResolutionStrategy(Enum):
     """Strategies for resolving conflicts."""
 
-    MANUAL = "manual"        # Require manual resolution
-    LAST_WRITE_WINS = "last_write_wins"            # Latest change wins
-    FIRST_WRITE_WINS = "first_write_wins"          # First change wins
-    MERGE = "merge"          # Attempt to merge changes
-    ABORT = "abort"          # Cancel the operation
+    MANUAL = "manual"  # Require manual resolution
+    LAST_WRITE_WINS = "last_write_wins"  # Latest change wins
+    FIRST_WRITE_WINS = "first_write_wins"  # First change wins
+    MERGE = "merge"  # Attempt to merge changes
+    ABORT = "abort"  # Cancel the operation
 
 
 @dataclass
@@ -253,14 +253,8 @@ class ConflictDetector:
             self._conflicts.clear()
             return count
 
-        count = len(
-            [c for c in self._conflicts.values() if c.item_id == item_id]
-        )
-        self._conflicts = {
-            cid: c
-            for cid, c in self._conflicts.items()
-            if c.item_id != item_id
-        }
+        count = len([c for c in self._conflicts.values() if c.item_id == item_id])
+        self._conflicts = {cid: c for cid, c in self._conflicts.items() if c.item_id != item_id}
         return count
 
     def has_conflicts(self, item_id: Optional[str] = None) -> bool:

@@ -293,6 +293,7 @@ class SocraticKnowledgeSkill:
         """
         try:
             from ...access.rbac import Role
+
             role_obj = Role[role.upper()]
             self.km.grant_permission(item_id, user_id, role_obj, tenant_id)
             return True

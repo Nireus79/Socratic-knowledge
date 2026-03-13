@@ -102,14 +102,11 @@ class OptimisticLockManager:
             raise ValueError(f"Lock expired for item {item_id}")
 
         if token.user_id != user_id:
-            raise ValueError(
-                f"Lock held by {token.user_id}, not {user_id}"
-            )
+            raise ValueError(f"Lock held by {token.user_id}, not {user_id}")
 
         if token.version != current_version:
             raise ValueError(
-                f"Version conflict: expected {token.version}, "
-                f"got {current_version}"
+                f"Version conflict: expected {token.version}, " f"got {current_version}"
             )
 
         return True
@@ -164,11 +161,7 @@ class OptimisticLockManager:
             int: Number of locks cleaned up
         """
         now = datetime.now(timezone.utc)
-        expired = [
-            item_id
-            for item_id, token in self._locks.items()
-            if token.expires_at <= now
-        ]
+        expired = [item_id for item_id, token in self._locks.items() if token.expires_at <= now]
 
         for item_id in expired:
             del self._locks[item_id]
@@ -185,11 +178,7 @@ class OptimisticLockManager:
         Returns:
             int: Number of locks cleared
         """
-        to_delete = [
-            item_id
-            for item_id, token in self._locks.items()
-            if token.user_id == user_id
-        ]
+        to_delete = [item_id for item_id, token in self._locks.items() if token.user_id == user_id]
 
         for item_id in to_delete:
             del self._locks[item_id]

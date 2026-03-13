@@ -28,9 +28,7 @@ class TestKnowledgeRAGIntegration:
         # Mock RAG client behavior
         rag_client.add_document.return_value = "doc_id_123"
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             doc_id = integration.index_item(item)
@@ -53,9 +51,7 @@ class TestKnowledgeRAGIntegration:
             tags=["tag1", "tag2"],
         )
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             integration.index_item(item)
@@ -91,9 +87,7 @@ class TestKnowledgeRAGIntegration:
             created_by="user1",
         )
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             doc_id = integration.update_index(item)
@@ -124,9 +118,7 @@ class TestKnowledgeRAGIntegration:
         )
         storage.get_item.return_value = item
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             results = integration.semantic_search(
@@ -144,9 +136,7 @@ class TestKnowledgeRAGIntegration:
         rag_client = MagicMock()
         rag_client.search.return_value = []
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             results = integration.semantic_search(
@@ -172,9 +162,7 @@ class TestKnowledgeRAGIntegration:
         mock_result.metadata = None
         rag_client.search.return_value = [mock_result]
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             results = integration.semantic_search(
@@ -193,9 +181,7 @@ class TestKnowledgeRAGIntegration:
         mock_result.metadata = {"tenant_id": "t1"}  # No item_id
         rag_client.search.return_value = [mock_result]
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             results = integration.semantic_search(
@@ -218,9 +204,7 @@ class TestKnowledgeRAGIntegration:
         }
         rag_client.search.return_value = [mock_result]
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             results = integration.semantic_search(
@@ -236,9 +220,7 @@ class TestKnowledgeRAGIntegration:
         rag_client = MagicMock()
         rag_client.retrieve_context.return_value = "Context text"
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             context = integration.get_context(
@@ -248,9 +230,7 @@ class TestKnowledgeRAGIntegration:
             )
 
         assert context == "Context text"
-        rag_client.retrieve_context.assert_called_once_with(
-            "test query", top_k=5
-        )
+        rag_client.retrieve_context.assert_called_once_with("test query", top_k=5)
 
     def test_clear_index(self):
         """Test clearing the RAG index."""
@@ -258,9 +238,7 @@ class TestKnowledgeRAGIntegration:
         rag_client = MagicMock()
         rag_client.clear.return_value = True
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             result = integration.clear_index()
@@ -282,9 +260,7 @@ class TestKnowledgeRAGIntegration:
             collection_id=None,
         )
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             integration.index_item(item)
@@ -314,9 +290,7 @@ class TestKnowledgeRAGIntegration:
         )
         storage.get_item.return_value = item
 
-        with patch(
-            "socratic_knowledge.retrieval.rag_integration.RAGClient"
-        ) as mock_rag_class:
+        with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
             results = integration.semantic_search(

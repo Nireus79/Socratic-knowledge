@@ -59,9 +59,7 @@ class BaseKnowledgeStore(ABC):
         pass
 
     @abstractmethod
-    def delete_item(
-        self, item_id: str, tenant_id: str, soft: bool = True
-    ) -> bool:
+    def delete_item(self, item_id: str, tenant_id: str, soft: bool = True) -> bool:
         """
         Delete item.
 

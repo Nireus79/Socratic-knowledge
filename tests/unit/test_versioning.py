@@ -37,9 +37,7 @@ class TestVersionHistory:
             created_by="user1",
         )
 
-        snapshot = VersionHistory.create_snapshot(
-            item, change_message="Fixed typo"
-        )
+        snapshot = VersionHistory.create_snapshot(item, change_message="Fixed typo")
 
         assert snapshot.change_message == "Fixed typo"
 
@@ -83,33 +81,23 @@ class TestVersionHistory:
 
     def test_can_rollback_to_valid_version(self):
         """Test that can rollback to valid previous version."""
-        assert VersionHistory.can_rollback_to(
-            current_version=5, target_version=3
-        )
+        assert VersionHistory.can_rollback_to(current_version=5, target_version=3)
 
     def test_cannot_rollback_to_current(self):
         """Test that cannot rollback to current version."""
-        assert not VersionHistory.can_rollback_to(
-            current_version=5, target_version=5
-        )
+        assert not VersionHistory.can_rollback_to(current_version=5, target_version=5)
 
     def test_cannot_rollback_to_future(self):
         """Test that cannot rollback to future version."""
-        assert not VersionHistory.can_rollback_to(
-            current_version=5, target_version=10
-        )
+        assert not VersionHistory.can_rollback_to(current_version=5, target_version=10)
 
     def test_cannot_rollback_to_version_zero(self):
         """Test that cannot rollback to version 0."""
-        assert not VersionHistory.can_rollback_to(
-            current_version=5, target_version=0
-        )
+        assert not VersionHistory.can_rollback_to(current_version=5, target_version=0)
 
     def test_can_rollback_to_version_one(self):
         """Test that can rollback to version 1."""
-        assert VersionHistory.can_rollback_to(
-            current_version=2, target_version=1
-        )
+        assert VersionHistory.can_rollback_to(current_version=2, target_version=1)
 
     def test_version_diff_summary_no_changes(self):
         """Test diff summary when content unchanged."""
@@ -265,12 +253,8 @@ class TestVersionHistory:
         )
 
         versions = [
-            VersionHistory.create_snapshot(
-                item1, change_message="Initial"
-            ),
-            VersionHistory.create_snapshot(
-                item2, change_message="Update"
-            ),
+            VersionHistory.create_snapshot(item1, change_message="Initial"),
+            VersionHistory.create_snapshot(item2, change_message="Update"),
         ]
 
         timeline = VersionHistory.get_version_timeline(versions)
@@ -360,9 +344,7 @@ class TestVersionHistory:
             created_by="user1",
         )
 
-        version = Version.create_from_item(
-            item, change_message="Initial commit"
-        )
+        version = Version.create_from_item(item, change_message="Initial commit")
 
         assert version.item_id == item.item_id
         assert version.content == item.content

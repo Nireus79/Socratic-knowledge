@@ -210,10 +210,7 @@ class AuditLogger:
 
         if user_id:
             count = len(
-                [
-                    e for e in self._events
-                    if e.tenant_id == tenant_id and e.user_id == user_id
-                ]
+                [e for e in self._events if e.tenant_id == tenant_id and e.user_id == user_id]
             )
 
         return count
