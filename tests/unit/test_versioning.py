@@ -1,6 +1,5 @@
 """Tests for versioning and history tracking."""
 
-import pytest
 from datetime import datetime, timezone
 
 from socratic_knowledge.core.knowledge_item import KnowledgeItem

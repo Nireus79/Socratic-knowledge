@@ -1,8 +1,8 @@
 """Version information model."""
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from datetime import datetime
+from typing import Any, Dict
 
 
 @dataclass

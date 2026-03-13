@@ -1,7 +1,6 @@
 """Tests for Openclaw skill integration."""
 
-import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from socratic_knowledge.integrations.openclaw import SocraticKnowledgeSkill
 
@@ -242,7 +241,7 @@ class TestSocraticKnowledgeSkill:
         km.create_item.return_value = item
 
         skill = SocraticKnowledgeSkill(knowledge_manager=km)
-        result = skill.create_item(
+        skill.create_item(
             tenant_id="t1",
             title="Test",
             content="Content",

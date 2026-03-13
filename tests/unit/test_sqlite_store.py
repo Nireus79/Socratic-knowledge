@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from socratic_knowledge.core.knowledge_item import KnowledgeItem
 from socratic_knowledge.core.collection import Collection
+from socratic_knowledge.core.knowledge_item import KnowledgeItem
 from socratic_knowledge.core.tenant import Tenant
 from socratic_knowledge.storage.sqlite_store import SQLiteKnowledgeStore
 

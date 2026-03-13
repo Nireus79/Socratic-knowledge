@@ -1,6 +1,6 @@
 """Version history tracking and management."""
 
-from typing import List, Optional
+from typing import List
 
 from ..core.knowledge_item import KnowledgeItem
 from ..core.version import Version

@@ -1,6 +1,5 @@
 """Tests for LangChain tool integration."""
 
-import pytest
 from unittest.mock import MagicMock
 
 from socratic_knowledge.integrations.langchain import SocraticKnowledgeTools
@@ -267,7 +266,7 @@ class TestSocraticKnowledgeTools:
         audit_tool = tools._get_audit_log_tool()
 
         # Call with only required parameter
-        result = audit_tool.invoke(
+        audit_tool.invoke(
             {
                 "tenant_id": "t1",
             }

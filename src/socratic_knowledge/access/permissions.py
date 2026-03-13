@@ -1,10 +1,10 @@
 """Permission checking and enforcement."""
 
-from typing import Dict, List, Optional, Set
+from typing import Optional
 
 from ..core.collection import Collection
 from ..core.knowledge_item import KnowledgeItem
-from .rbac import Permission, Role, ROLE_PERMISSIONS
+from .rbac import ROLE_PERMISSIONS, Permission, Role
 
 
 class AccessControl:

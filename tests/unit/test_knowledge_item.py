@@ -1,6 +1,5 @@
 """Tests for KnowledgeItem model."""
 
-import pytest
 
 from socratic_knowledge.core.knowledge_item import KnowledgeItem
 

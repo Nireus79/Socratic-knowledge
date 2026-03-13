@@ -1,7 +1,8 @@
 """Tests for RAG integration and semantic search."""
 
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from socratic_knowledge.core.knowledge_item import KnowledgeItem
 from socratic_knowledge.retrieval.rag_integration import HAS_RAG, KnowledgeRAGIntegration
@@ -139,7 +140,7 @@ class TestKnowledgeRAGIntegration:
         with patch("socratic_knowledge.retrieval.rag_integration.RAGClient") as mock_rag_class:
             mock_rag_class.return_value = rag_client
             integration = KnowledgeRAGIntegration(storage)
-            results = integration.semantic_search(
+            integration.semantic_search(
                 tenant_id="t1",
                 query="test",
                 top_k=5,

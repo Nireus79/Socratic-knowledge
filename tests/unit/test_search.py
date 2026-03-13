@@ -1,7 +1,8 @@
 """Tests for search engine."""
 
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 
 from socratic_knowledge.core.knowledge_item import KnowledgeItem
 from socratic_knowledge.retrieval.search import SearchEngine, SearchMode
@@ -305,7 +306,7 @@ class TestSearchEngine:
         rag.semantic_search.return_value = [item]
 
         engine = SearchEngine(storage, rag=rag)
-        results = engine.search(
+        engine.search(
             tenant_id="t1",
             query="test",
         )

@@ -1,6 +1,6 @@
 """RAG integration for semantic search and retrieval."""
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 try:
     from socratic_rag import RAGClient, RAGConfig, SearchResult
@@ -150,7 +150,6 @@ class KnowledgeRAGIntegration:
         Returns:
             str: Formatted context string
         """
-        filters = {"tenant_id": tenant_id}
         return self.rag.retrieve_context(query, top_k=top_k)
 
     def clear_index(self) -> bool:

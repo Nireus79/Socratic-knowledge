@@ -1,7 +1,5 @@
 """Tests for audit logging."""
 
-import pytest
-from datetime import datetime, timezone
 
 from socratic_knowledge.audit.events import AuditEvent, AuditEventType
 from socratic_knowledge.audit.logger import AuditLogger

@@ -1,16 +1,14 @@
 """Tests for collaboration and concurrent edit handling."""
 
+
 import pytest
-from datetime import datetime, timedelta, timezone
 
 from socratic_knowledge.collaboration.conflict import (
-    Conflict,
     ConflictDetector,
     ConflictResolutionStrategy,
     ConflictType,
 )
 from socratic_knowledge.collaboration.locks import (
-    LockToken,
     OptimisticLockManager,
 )
 
@@ -265,9 +263,9 @@ class TestConflictDetector:
     def test_get_item_conflicts(self):
         """Test retrieving all conflicts for item."""
         detector = ConflictDetector()
-        c1 = detector.detect_version_conflict("item_1", "user1", 1, 2)
-        c2 = detector.detect_version_conflict("item_1", "user2", 1, 3)
-        c3 = detector.detect_version_conflict("item_2", "user1", 1, 2)
+        detector.detect_version_conflict("item_1", "user1", 1, 2)
+        detector.detect_version_conflict("item_1", "user2", 1, 3)
+        detector.detect_version_conflict("item_2", "user1", 1, 2)
 
         conflicts = detector.get_item_conflicts("item_1")
         assert len(conflicts) == 2

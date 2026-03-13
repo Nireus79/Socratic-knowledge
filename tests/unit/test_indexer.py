@@ -1,6 +1,5 @@
 """Tests for knowledge indexer."""
 
-import pytest
 from unittest.mock import MagicMock
 
 from socratic_knowledge.core.knowledge_item import KnowledgeItem

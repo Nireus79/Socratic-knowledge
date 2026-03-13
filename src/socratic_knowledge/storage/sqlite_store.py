@@ -3,7 +3,7 @@
 import json
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from ..core.collection import Collection
 from ..core.knowledge_item import KnowledgeItem

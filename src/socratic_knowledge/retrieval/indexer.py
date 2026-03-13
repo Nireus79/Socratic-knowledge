@@ -1,6 +1,6 @@
 """Automatic indexing of knowledge items for RAG."""
 
-from typing import List, Optional
+from typing import List
 
 from ..core.knowledge_item import KnowledgeItem
 from .rag_integration import KnowledgeRAGIntegration

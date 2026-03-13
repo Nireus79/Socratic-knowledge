@@ -1,6 +1,5 @@
 """Main KnowledgeManager interface for Socratic Knowledge."""
 
-from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from .access.permissions import AccessControl

@@ -1,6 +1,5 @@
 """Tests for access control and RBAC."""
 
-import pytest
 
 from socratic_knowledge.access.permissions import AccessControl
 from socratic_knowledge.access.rbac import Permission, Role
