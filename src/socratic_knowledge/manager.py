@@ -3,12 +3,16 @@
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
+from .access.permissions import AccessControl
+from .access.rbac import Permission, Role
 from .core.collection import Collection
 from .core.knowledge_item import KnowledgeItem
 from .core.tenant import Tenant
 from .core.version import Version
 from .storage.base import BaseKnowledgeStore
 from .storage.sqlite_store import SQLiteKnowledgeStore
+from .versioning.history import VersionHistory
+from .versioning.version_model import VersionInfo
 
 
 class KnowledgeManager:
@@ -294,6 +298,42 @@ class KnowledgeManager:
         """
         return self.store.list_versions(item_id=item_id, limit=limit)
 
+    def get_version_info(
+        self,
+        item_id: str,
+        limit: int = 10,
+    ) -> List[VersionInfo]:
+        """
+        Get version info for item (lightweight).
+
+        Args:
+            item_id: Item ID
+            limit: Maximum versions to return
+
+        Returns:
+            List[VersionInfo]: Version information
+        """
+        versions = self.get_version_history(item_id, limit)
+        return VersionHistory.get_version_info_list(versions)
+
+    def get_version_timeline(
+        self,
+        item_id: str,
+        limit: int = 10,
+    ) -> List[dict]:
+        """
+        Get timeline view of version history.
+
+        Args:
+            item_id: Item ID
+            limit: Maximum versions to return
+
+        Returns:
+            List[dict]: Timeline events
+        """
+        versions = self.get_version_history(item_id, limit)
+        return VersionHistory.get_version_timeline(versions)
+
     def rollback_item(
         self,
         item_id: str,
@@ -340,14 +380,14 @@ class KnowledgeManager:
             change_message=f"Rolled back to version {version_number}",
         )
 
-    # ==================== Access control (stub for now) ====================
+    # ==================== Access control ====================
 
     def grant_permission(
         self,
         item_id: str,
         user_id: str,
-        role: str,
-        granted_by: str,
+        role: Role,
+        tenant_id: str,
     ) -> None:
         """
         Grant permission to user.
@@ -356,12 +396,67 @@ class KnowledgeManager:
             item_id: Item ID
             user_id: User to grant permission to
             role: Role (viewer, editor, admin, owner)
-            granted_by: User granting permission
+            tenant_id: Tenant ID (for security)
         """
-        # To be implemented in Phase 2
-        pass
+        item = self.get_item(item_id, tenant_id)
+        if not item:
+            raise ValueError(f"Item {item_id} not found")
 
-    def can_user_edit(self, user_id: str, item_id: str, tenant_id: str) -> bool:
+        AccessControl.grant_permission(item, user_id, role)
+        self.store.update_item(item)
+
+    def revoke_permission(
+        self,
+        item_id: str,
+        user_id: str,
+        tenant_id: str,
+        role: Optional[Role] = None,
+    ) -> None:
+        """
+        Revoke permission from user.
+
+        Args:
+            item_id: Item ID
+            user_id: User to revoke permission from
+            tenant_id: Tenant ID (for security)
+            role: Specific role to revoke, or None to revoke all
+        """
+        item = self.get_item(item_id, tenant_id)
+        if not item:
+            raise ValueError(f"Item {item_id} not found")
+
+        AccessControl.revoke_permission(item, user_id, role)
+        self.store.update_item(item)
+
+    def can_user_read(
+        self,
+        user_id: str,
+        item_id: str,
+        tenant_id: str,
+    ) -> bool:
+        """
+        Check if user can read item.
+
+        Args:
+            user_id: User ID
+            item_id: Item ID
+            tenant_id: Tenant ID
+
+        Returns:
+            bool: True if user can read
+        """
+        item = self.get_item(item_id, tenant_id)
+        if not item:
+            return False
+
+        return AccessControl.check_permission(user_id, item, Permission.READ)
+
+    def can_user_edit(
+        self,
+        user_id: str,
+        item_id: str,
+        tenant_id: str,
+    ) -> bool:
         """
         Check if user can edit item.
 
@@ -373,5 +468,31 @@ class KnowledgeManager:
         Returns:
             bool: True if user can edit
         """
-        # To be implemented in Phase 2
-        return True  # Allow all for now
+        item = self.get_item(item_id, tenant_id)
+        if not item:
+            return False
+
+        return AccessControl.check_permission(user_id, item, Permission.WRITE)
+
+    def can_user_delete(
+        self,
+        user_id: str,
+        item_id: str,
+        tenant_id: str,
+    ) -> bool:
+        """
+        Check if user can delete item.
+
+        Args:
+            user_id: User ID
+            item_id: Item ID
+            tenant_id: Tenant ID
+
+        Returns:
+            bool: True if user can delete
+        """
+        item = self.get_item(item_id, tenant_id)
+        if not item:
+            return False
+
+        return AccessControl.check_permission(user_id, item, Permission.DELETE)
