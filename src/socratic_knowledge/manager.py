@@ -5,6 +5,10 @@ from typing import Any, Dict, List, Optional
 
 from .access.permissions import AccessControl
 from .access.rbac import Permission, Role
+from .audit.events import AuditEvent, AuditEventType
+from .audit.logger import AuditLogger
+from .collaboration.conflict import Conflict, ConflictDetector
+from .collaboration.locks import OptimisticLockManager
 from .core.collection import Collection
 from .core.knowledge_item import KnowledgeItem
 from .core.tenant import Tenant
@@ -62,6 +66,13 @@ class KnowledgeManager:
 
         # Initialize search engine
         self.search_engine = SearchEngine(self.store, self.rag)
+
+        # Initialize audit logging
+        self.audit_logger = AuditLogger()
+
+        # Initialize collaboration managers
+        self.lock_manager = OptimisticLockManager()
+        self.conflict_detector = ConflictDetector()
 
     # ==================== Tenant operations ====================
 
@@ -606,3 +617,214 @@ class KnowledgeManager:
             return False
 
         return AccessControl.check_permission(user_id, item, Permission.DELETE)
+
+    # ==================== Audit logging ====================
+
+    def log_audit_event(
+        self,
+        event_type: AuditEventType,
+        tenant_id: str,
+        user_id: str,
+        resource_type: str,
+        resource_id: str,
+        action: str,
+        changes: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> AuditEvent:
+        """
+        Log an audit event.
+
+        Args:
+            event_type: Type of event
+            tenant_id: Tenant ID
+            user_id: User performing action
+            resource_type: Type of resource
+            resource_id: ID of resource
+            action: Action performed
+            changes: Optional change details
+            metadata: Optional metadata
+
+        Returns:
+            AuditEvent: Logged event
+        """
+        return self.audit_logger.log_event(
+            event_type=event_type,
+            tenant_id=tenant_id,
+            user_id=user_id,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            action=action,
+            changes=changes,
+            metadata=metadata,
+        )
+
+    def get_audit_log(
+        self,
+        tenant_id: str,
+        limit: int = 100,
+    ) -> List[AuditEvent]:
+        """
+        Get audit log for tenant.
+
+        Args:
+            tenant_id: Tenant ID
+            limit: Maximum events to return
+
+        Returns:
+            List[AuditEvent]: Audit trail
+        """
+        return self.audit_logger.get_tenant_audit_log(tenant_id, limit)
+
+    def get_user_activity(
+        self,
+        tenant_id: str,
+        user_id: str,
+        limit: int = 50,
+    ) -> List[AuditEvent]:
+        """
+        Get activity for specific user.
+
+        Args:
+            tenant_id: Tenant ID
+            user_id: User ID
+            limit: Maximum events to return
+
+        Returns:
+            List[AuditEvent]: User activity
+        """
+        return self.audit_logger.get_user_activity(tenant_id, user_id, limit)
+
+    def get_resource_history(
+        self,
+        resource_id: str,
+        limit: int = 50,
+    ) -> List[AuditEvent]:
+        """
+        Get change history for resource.
+
+        Args:
+            resource_id: Resource ID
+            limit: Maximum events to return
+
+        Returns:
+            List[AuditEvent]: Resource history
+        """
+        return self.audit_logger.get_resource_history(resource_id, limit)
+
+    # ==================== Collaboration ====================
+
+    def acquire_edit_lock(
+        self,
+        item_id: str,
+        user_id: str,
+        current_version: int,
+    ) -> Any:
+        """
+        Acquire a lock for editing.
+
+        Args:
+            item_id: Item to lock
+            user_id: User acquiring lock
+            current_version: Current version number
+
+        Returns:
+            LockToken: Lock token for validation
+        """
+        return self.lock_manager.acquire_lock(
+            item_id, user_id, current_version
+        )
+
+    def validate_edit_lock(
+        self,
+        item_id: str,
+        user_id: str,
+        current_version: int,
+    ) -> bool:
+        """
+        Validate lock before update.
+
+        Args:
+            item_id: Item being updated
+            user_id: User performing update
+            current_version: Current version
+
+        Returns:
+            bool: True if lock is valid
+
+        Raises:
+            ValueError: If conflict detected
+        """
+        return self.lock_manager.validate_lock(
+            item_id, user_id, current_version
+        )
+
+    def release_edit_lock(self, item_id: str) -> bool:
+        """
+        Release an edit lock.
+
+        Args:
+            item_id: Item to unlock
+
+        Returns:
+            bool: True if released
+        """
+        return self.lock_manager.release_lock(item_id)
+
+    def is_item_locked(self, item_id: str) -> bool:
+        """
+        Check if item is locked.
+
+        Args:
+            item_id: Item ID
+
+        Returns:
+            bool: True if locked
+        """
+        return self.lock_manager.is_locked(item_id)
+
+    def detect_version_conflict(
+        self,
+        item_id: str,
+        user_id: str,
+        expected_version: int,
+        actual_version: int,
+    ) -> Optional[Conflict]:
+        """
+        Detect version conflict.
+
+        Args:
+            item_id: Item being edited
+            user_id: User making change
+            expected_version: Version user expects
+            actual_version: Actual current version
+
+        Returns:
+            Optional[Conflict]: Conflict if detected
+        """
+        return self.conflict_detector.detect_version_conflict(
+            item_id, user_id, expected_version, actual_version
+        )
+
+    def get_item_conflicts(self, item_id: str) -> List[Conflict]:
+        """
+        Get unresolved conflicts for item.
+
+        Args:
+            item_id: Item ID
+
+        Returns:
+            List[Conflict]: Unresolved conflicts
+        """
+        return self.conflict_detector.get_item_conflicts(item_id)
+
+    def has_conflicts(self, item_id: Optional[str] = None) -> bool:
+        """
+        Check if there are unresolved conflicts.
+
+        Args:
+            item_id: Optional item filter
+
+        Returns:
+            bool: True if conflicts exist
+        """
+        return self.conflict_detector.has_conflicts(item_id)
