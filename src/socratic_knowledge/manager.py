@@ -9,6 +9,8 @@ from .core.collection import Collection
 from .core.knowledge_item import KnowledgeItem
 from .core.tenant import Tenant
 from .core.version import Version
+from .retrieval.rag_integration import KnowledgeRAGIntegration
+from .retrieval.search import SearchEngine, SearchMode
 from .storage.base import BaseKnowledgeStore
 from .storage.sqlite_store import SQLiteKnowledgeStore
 from .versioning.history import VersionHistory
@@ -27,6 +29,8 @@ class KnowledgeManager:
         self,
         storage: str = "sqlite",
         db_path: str = "knowledge.db",
+        enable_rag: bool = True,
+        rag_config: Optional[Any] = None,
         **storage_kwargs: Any,
     ):
         """
@@ -35,12 +39,29 @@ class KnowledgeManager:
         Args:
             storage: Storage backend ("sqlite" or custom)
             db_path: Path to SQLite database
+            enable_rag: Enable RAG integration for semantic search
+            rag_config: RAG configuration (uses RAGConfig defaults if None)
             **storage_kwargs: Additional storage backend arguments
         """
         if storage == "sqlite":
             self.store: BaseKnowledgeStore = SQLiteKnowledgeStore(db_path=db_path)
         else:
             raise ValueError(f"Unknown storage backend: {storage}")
+
+        # Initialize RAG integration if enabled
+        self.rag: Optional[KnowledgeRAGIntegration] = None
+        if enable_rag:
+            try:
+                self.rag = KnowledgeRAGIntegration(
+                    storage=self.store,
+                    rag_config=rag_config,
+                )
+            except Exception:
+                # RAG not available, semantic search will be disabled
+                pass
+
+        # Initialize search engine
+        self.search_engine = SearchEngine(self.store, self.rag)
 
     # ==================== Tenant operations ====================
 
@@ -278,6 +299,95 @@ class KnowledgeManager:
             List[KnowledgeItem]: Search results
         """
         return self.store.search(tenant_id=tenant_id, query=query, limit=limit)
+
+    def semantic_search(
+        self,
+        tenant_id: str,
+        query: str,
+        top_k: int = 5,
+        collection_id: Optional[str] = None,
+    ) -> List[KnowledgeItem]:
+        """
+        Semantic search using RAG embeddings.
+
+        Args:
+            tenant_id: Tenant ID
+            query: Search query
+            top_k: Maximum results
+            collection_id: Optional collection filter
+
+        Returns:
+            List[KnowledgeItem]: Matching items ranked by relevance
+
+        Raises:
+            ValueError: If RAG not available
+        """
+        if not self.rag:
+            raise ValueError(
+                "Semantic search requires RAG integration. "
+                "Enable with enable_rag=True"
+            )
+
+        return self.rag.semantic_search(
+            tenant_id=tenant_id,
+            query=query,
+            top_k=top_k,
+            collection_id=collection_id,
+        )
+
+    def hybrid_search(
+        self,
+        tenant_id: str,
+        query: str,
+        top_k: int = 10,
+        collection_id: Optional[str] = None,
+    ) -> List[KnowledgeItem]:
+        """
+        Hybrid search combining keyword and semantic.
+
+        Returns top_k results ranked from both search types.
+
+        Args:
+            tenant_id: Tenant ID
+            query: Search query
+            top_k: Maximum results
+            collection_id: Optional collection filter
+
+        Returns:
+            List[KnowledgeItem]: Combined results
+        """
+        mode = SearchMode.HYBRID if self.rag else SearchMode.KEYWORD
+        return self.search_engine.search(
+            tenant_id=tenant_id,
+            query=query,
+            mode=mode,
+            top_k=top_k,
+            collection_id=collection_id,
+        )
+
+    def index_item(self, item: KnowledgeItem) -> None:
+        """
+        Index knowledge item for semantic search.
+
+        Call after creating an item if RAG is enabled.
+
+        Args:
+            item: Item to index
+        """
+        if self.rag:
+            self.rag.index_item(item)
+
+    def re_index_item(self, item: KnowledgeItem) -> None:
+        """
+        Re-index knowledge item after update.
+
+        Call after updating an item if RAG is enabled.
+
+        Args:
+            item: Updated item
+        """
+        if self.rag:
+            self.rag.update_index(item)
 
     # ==================== Versioning operations ====================
 
