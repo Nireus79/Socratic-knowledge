@@ -6,9 +6,7 @@ from unittest.mock import MagicMock, patch
 from socratic_knowledge.core.knowledge_item import KnowledgeItem
 from socratic_knowledge.retrieval.rag_integration import HAS_RAG, KnowledgeRAGIntegration
 
-pytestmark = pytest.mark.skipif(
-    not HAS_RAG, reason="socratic_rag not installed"
-)
+pytestmark = pytest.mark.skipif(not HAS_RAG, reason="socratic_rag not installed")
 
 
 class TestKnowledgeRAGIntegration:
