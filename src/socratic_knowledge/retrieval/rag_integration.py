@@ -2,7 +2,12 @@
 
 from typing import Any, Dict, List, Optional
 
-from socratic_rag import RAGClient, RAGConfig, SearchResult
+try:
+    from socratic_rag import RAGClient, RAGConfig, SearchResult
+except ImportError:
+    RAGClient = None  # type: ignore
+    RAGConfig = None  # type: ignore
+    SearchResult = None  # type: ignore
 
 from ..core.knowledge_item import KnowledgeItem
 from ..storage.base import BaseKnowledgeStore
