@@ -4,7 +4,10 @@ from typing import Any, Dict, List, Optional
 
 try:
     from socratic_rag import RAGClient, RAGConfig, SearchResult
+
+    HAS_RAG = True
 except ImportError:
+    HAS_RAG = False
     RAGClient = None  # type: ignore
     RAGConfig = None  # type: ignore
     SearchResult = None  # type: ignore
@@ -33,7 +36,7 @@ class KnowledgeRAGIntegration:
             storage: Knowledge store for retrieving items
             rag_config: RAG configuration (uses defaults if None)
         """
-        if RAGClient is None:
+        if not HAS_RAG:
             raise ImportError(
                 "socratic_rag is not installed. "
                 "Install with: pip install socratic-knowledge[rag]"
