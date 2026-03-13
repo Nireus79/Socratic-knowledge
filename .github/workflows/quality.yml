@@ -44,6 +44,12 @@ jobs:
       run: |
         python -m black --diff --line-length=100 --target-version=py39 --verbose src/socratic_knowledge/storage/sqlite_store.py || true
 
+    - name: Debug - Try auto-fixing with Black
+      run: |
+        python -m black --line-length=100 --target-version=py39 src/socratic_knowledge/storage/sqlite_store.py
+        echo "Checking if file was modified:"
+        git diff src/socratic_knowledge/storage/sqlite_store.py || echo "No changes"
+
     - name: Check formatting with Black
       run: |
         black --check --line-length=100 --target-version=py39 src/socratic_knowledge/ tests/ examples/
