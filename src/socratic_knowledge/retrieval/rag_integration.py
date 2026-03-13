@@ -33,6 +33,11 @@ class KnowledgeRAGIntegration:
             storage: Knowledge store for retrieving items
             rag_config: RAG configuration (uses defaults if None)
         """
+        if RAGClient is None:
+            raise ImportError(
+                "socratic_rag is not installed. "
+                "Install with: pip install socratic-knowledge[rag]"
+            )
         self.storage = storage
         self.rag = RAGClient(rag_config or RAGConfig())
 
