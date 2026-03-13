@@ -2,6 +2,7 @@
 
 from typing import Any, Dict, List, Optional
 
+from ...audit.events import AuditEventType
 from ...manager import KnowledgeManager
 
 
@@ -110,6 +111,8 @@ class SocraticKnowledgeSkill:
         if not item:
             return None
 
+        assert item.created_at is not None, "Item.created_at must be set"
+        assert item.updated_at is not None, "Item.updated_at must be set"
         return {
             "item_id": item.item_id,
             "title": item.title,
@@ -158,7 +161,7 @@ class SocraticKnowledgeSkill:
         )
 
         self.km.log_audit_event(
-            event_type="item_created",
+            event_type=AuditEventType.ITEM_CREATED,
             tenant_id=tenant_id,
             user_id=user_id,
             resource_type="item",

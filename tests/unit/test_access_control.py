@@ -1,6 +1,5 @@
 """Tests for access control and RBAC."""
 
-
 from socratic_knowledge.access.permissions import AccessControl
 from socratic_knowledge.access.rbac import Permission, Role
 from socratic_knowledge.core.collection import Collection

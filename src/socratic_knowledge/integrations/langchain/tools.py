@@ -149,6 +149,7 @@ class SocraticKnowledgeTools:
             if not item:
                 return f"Item {item_id} not found"
 
+            assert item.created_at is not None, "Item.created_at must be set"
             return (
                 f"**{item.title}**\n\n"
                 f"Content: {item.content}\n\n"

@@ -1,6 +1,5 @@
 """Tests for collaboration and concurrent edit handling."""
 
-
 import pytest
 
 from socratic_knowledge.collaboration.conflict import (

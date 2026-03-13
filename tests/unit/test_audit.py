@@ -1,6 +1,5 @@
 """Tests for audit logging."""
 
-
 from socratic_knowledge.audit.events import AuditEvent, AuditEventType
 from socratic_knowledge.audit.logger import AuditLogger
 

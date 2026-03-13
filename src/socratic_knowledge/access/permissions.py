@@ -1,10 +1,13 @@
 """Permission checking and enforcement."""
 
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from ..core.collection import Collection
 from ..core.knowledge_item import KnowledgeItem
 from .rbac import ROLE_PERMISSIONS, Permission, Role
+
+if TYPE_CHECKING:
+    from ..storage.base import BaseKnowledgeStore
 
 
 class AccessControl:
@@ -57,7 +60,7 @@ class AccessControl:
         user_id: str,
         collection: Collection,
         permission: Permission,
-        storage: Optional[object] = None,
+        storage: Optional["BaseKnowledgeStore"] = None,
     ) -> bool:
         """
         Check permission with inheritance from parent collections.

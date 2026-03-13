@@ -47,6 +47,7 @@ class VersionHistory:
         info_list = []
         for version in versions:
             preview = version.content[:100] if version.content else ""
+            assert version.created_at is not None, "Version.created_at must be set"
             info = VersionInfo(
                 version_number=version.version_number,
                 created_at=version.created_at,
@@ -114,6 +115,7 @@ class VersionHistory:
         """
         timeline = []
         for version in versions:
+            assert version.created_at is not None, "Version.created_at must be set"
             timeline.append(
                 {
                     "version": version.version_number,

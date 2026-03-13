@@ -130,6 +130,8 @@ class SearchEngine:
         Returns:
             List[KnowledgeItem]: Matching items
         """
+        if self.rag is None:
+            raise ValueError("Semantic search requires RAG integration")
         return self.rag.semantic_search(
             tenant_id=tenant_id,
             query=query,
