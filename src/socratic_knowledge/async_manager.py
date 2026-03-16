@@ -9,6 +9,7 @@ from .core.tenant import Tenant
 from .core.version import Version
 from .manager import KnowledgeManager
 from .retrieval.search import SearchMode
+from .versioning.version_model import VersionInfo
 
 
 class AsyncKnowledgeManager:
