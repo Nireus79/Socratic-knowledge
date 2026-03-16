@@ -192,6 +192,16 @@ class KnowledgeManager:
     def get_audit_log(self, tenant_id: str, limit: int = 100) -> List[Dict[str, Any]]
 ```
 
+## Support Development
+
+If you find this package useful, consider supporting development:
+
+- [Become a Sponsor](https://github.com/sponsors/Nireus79) - Get early access to new features
+- [Star on GitHub](https://github.com/Nireus79/Socratic-knowledge) - Shows your appreciation
+- [Report Issues](https://github.com/Nireus79/Socratic-knowledge/issues) - Help improve the package
+
+Your support helps fund development of the entire Socratic ecosystem.
+
 ## Examples
 
 See `examples/` directory for complete examples:
