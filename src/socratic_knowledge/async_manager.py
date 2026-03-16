@@ -55,9 +55,7 @@ class AsyncKnowledgeManager:
     async def create_tenant(self, name: str, **kwargs: Any) -> Tenant:
         """Create new tenant asynchronously."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self._manager.create_tenant, name, *kwargs.values()
-        )
+        return await loop.run_in_executor(None, self._manager.create_tenant, name, *kwargs.values())
 
     async def get_tenant(self, tenant_id: str) -> Optional[Tenant]:
         """Get tenant by ID asynchronously."""
@@ -86,9 +84,7 @@ class AsyncKnowledgeManager:
     async def get_collection(self, collection_id: str) -> Optional[Collection]:
         """Get collection by ID asynchronously."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self._manager.get_collection, collection_id
-        )
+        return await loop.run_in_executor(None, self._manager.get_collection, collection_id)
 
     async def list_collections(
         self,
@@ -130,9 +126,7 @@ class AsyncKnowledgeManager:
     async def get_item(self, item_id: str, tenant_id: str) -> Optional[KnowledgeItem]:
         """Get knowledge item by ID asynchronously."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self._manager.get_item, item_id, tenant_id
-        )
+        return await loop.run_in_executor(None, self._manager.get_item, item_id, tenant_id)
 
     async def update_item(
         self,
@@ -156,9 +150,7 @@ class AsyncKnowledgeManager:
     async def delete_item(self, item_id: str, tenant_id: str) -> bool:
         """Delete knowledge item asynchronously."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self._manager.delete_item, item_id, tenant_id
-        )
+        return await loop.run_in_executor(None, self._manager.delete_item, item_id, tenant_id)
 
     async def list_items(
         self,
@@ -183,7 +175,7 @@ class AsyncKnowledgeManager:
         query: str,
         collection_id: Optional[str] = None,
         limit: int = 10,
-        search_mode: SearchMode = SearchMode.FULL_TEXT,
+        search_mode: SearchMode = SearchMode.KEYWORD,
     ) -> List[KnowledgeItem]:
         """Search knowledge items asynchronously."""
         loop = asyncio.get_event_loop()
@@ -255,16 +247,12 @@ class AsyncKnowledgeManager:
     ) -> List[Version]:
         """Get version history asynchronously."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self._manager.get_version_history, item_id, limit
-        )
+        return await loop.run_in_executor(None, self._manager.get_version_history, item_id, limit)
 
     async def get_version_info(self, version_id: str) -> Optional[VersionInfo]:
         """Get version info asynchronously."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None, self._manager.get_version_info, version_id
-        )
+        return await loop.run_in_executor(None, self._manager.get_version_info, version_id)
 
     async def rollback_item(
         self,
