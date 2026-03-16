@@ -5,6 +5,7 @@ Provides multi-tenant knowledge management with access control, versioning,
 and RAG integration.
 """
 
+from .async_manager import AsyncKnowledgeManager
 from .core.collection import Collection
 from .core.knowledge_item import KnowledgeItem
 from .core.tenant import Tenant
@@ -23,4 +24,5 @@ __all__ = [
     "Version",
     # Manager
     "KnowledgeManager",
+    "AsyncKnowledgeManager",
 ]
