@@ -5,6 +5,16 @@
 [![PyPI](https://img.shields.io/pypi/v/socratic-knowledge)](https://pypi.org/project/socratic-knowledge/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## Why Socratic Knowledge?
+
+Enterprise knowledge management needs multi-tenancy and governance. Socratic Knowledge provides:
+
+- **Multi-Tenancy** - Completely isolated knowledge spaces for multiple organizations with tenant-level access control
+- **Access Control** - Role-based permissions (RBAC) with fine-grained control: Viewer, Editor, Admin, Owner
+- **Full Versioning** - Complete history tracking with rollback capabilities for all changes
+- **Semantic Search** - RAG-powered semantic search with embeddings for intelligent retrieval
+- **Audit Logging** - Complete audit trail for compliance, tracking all changes and access patterns
+
 Enterprise knowledge management system with **multi-tenancy**, **access control**, **versioning**, and **RAG integration**.
 
 ## Features
