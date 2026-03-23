@@ -173,8 +173,8 @@ class VersionManager:
         return {
             "version_a": version_a,
             "version_b": version_b,
-            "lines_added": len([l for l in lines_b if l not in lines_a]),
-            "lines_removed": len([l for l in lines_a if l not in lines_b]),
+            "lines_added": len([line for line in lines_b if line not in lines_a]),
+            "lines_removed": len([line for line in lines_a if line not in lines_b]),
             "content_change_percent": abs(len(lines_b) - len(lines_a)) / max(len(lines_a), 1),
         }
 
