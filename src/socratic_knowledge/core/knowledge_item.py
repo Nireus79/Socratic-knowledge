@@ -126,9 +126,7 @@ class KnowledgeItem:
             KnowledgeItem: Deserialized knowledge item
         """
         # Parse datetime strings to datetime objects
-        data = ensure_iso_datetime(
-            data, "created_at", "updated_at", "deleted_at"
-        )
+        data = ensure_iso_datetime(data, "created_at", "updated_at", "deleted_at")
         return cls(**data)
 
     def increment_version(self) -> None:
