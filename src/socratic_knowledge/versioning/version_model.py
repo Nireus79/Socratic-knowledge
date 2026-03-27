@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict
 
+from ..utils import ensure_iso_datetime
+
 
 @dataclass
 class VersionInfo:
@@ -28,8 +30,6 @@ class VersionInfo:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "VersionInfo":
         """Deserialize from dictionary."""
-        created_at = data.get("created_at")
-        if isinstance(created_at, str):
-            data = {**data, "created_at": datetime.fromisoformat(created_at)}
+        data = ensure_iso_datetime(data, "created_at")
 
         return cls(**data)

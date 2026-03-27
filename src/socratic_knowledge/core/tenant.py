@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
+from ..utils import ensure_iso_datetime
+
 
 @dataclass
 class Tenant:
@@ -82,8 +84,6 @@ class Tenant:
             Tenant: Deserialized tenant
         """
         # Parse datetime strings
-        created_at = data.get("created_at")
-        if isinstance(created_at, str):
-            data = {**data, "created_at": datetime.fromisoformat(created_at)}
+        data = ensure_iso_datetime(data, "created_at")
 
         return cls(**data)

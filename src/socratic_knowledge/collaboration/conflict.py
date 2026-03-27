@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, Optional
 
+from ..utils import ensure_iso_datetime
+
 
 class ConflictType(Enum):
     """Types of conflicts."""
@@ -54,6 +56,23 @@ class Conflict:
             "changes_existing": self.changes_existing,
             "metadata": self.metadata,
         }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "Conflict":
+        """
+        Deserialize from dictionary.
+
+        Args:
+            data: Serialized conflict data
+
+        Returns:
+            Conflict: Deserialized conflict object
+        """
+        # Parse datetime string and convert enum value
+        data = ensure_iso_datetime(dict(data), "timestamp")
+        if isinstance(data.get("conflict_type"), str):
+            data["conflict_type"] = ConflictType(data["conflict_type"])
+        return cls(**data)
 
 
 class ConflictDetector:

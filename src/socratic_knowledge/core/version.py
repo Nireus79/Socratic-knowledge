@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional
 from uuid import uuid4
 
 from .knowledge_item import KnowledgeItem
+from ..utils import ensure_iso_datetime
 
 
 @dataclass
@@ -92,8 +93,6 @@ class Version:
             Version: Deserialized version
         """
         # Parse datetime strings
-        created_at = data.get("created_at")
-        if isinstance(created_at, str):
-            data = {**data, "created_at": datetime.fromisoformat(created_at)}
+        data = ensure_iso_datetime(data, "created_at")
 
         return cls(**data)

@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
+from ..utils import ensure_iso_datetime
+
 
 @dataclass
 class Collection:
@@ -107,15 +109,8 @@ class Collection:
         Returns:
             Collection: Deserialized collection
         """
-        # Parse datetime strings
-        created_at = data.get("created_at")
-        if isinstance(created_at, str):
-            data = {**data, "created_at": datetime.fromisoformat(created_at)}
-
-        updated_at = data.get("updated_at")
-        if isinstance(updated_at, str):
-            data = {**data, "updated_at": datetime.fromisoformat(updated_at)}
-
+        # Parse datetime strings to datetime objects
+        data = ensure_iso_datetime(data, "created_at", "updated_at")
         return cls(**data)
 
     def get_path(self, storage: Any) -> List[str]:

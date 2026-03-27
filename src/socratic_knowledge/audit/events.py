@@ -5,6 +5,8 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, Optional
 
+from ..utils import ensure_iso_datetime
+
 
 class AuditEventType(Enum):
     """Types of audit events."""
@@ -84,8 +86,6 @@ class AuditEvent:
                 "event_type": AuditEventType(event_type),
             }
 
-        timestamp = data.get("timestamp")
-        if isinstance(timestamp, str):
-            data = {**data, "timestamp": datetime.fromisoformat(timestamp)}
+        data = ensure_iso_datetime(data, "timestamp")
 
         return cls(**data)
