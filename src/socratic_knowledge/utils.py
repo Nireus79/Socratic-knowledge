@@ -1,7 +1,7 @@
 """Utility functions for socratic-knowledge package."""
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 
 def parse_iso_datetime(value: Any) -> Optional[datetime]:

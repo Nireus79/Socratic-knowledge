@@ -5,8 +5,8 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 from uuid import uuid4
 
-from .knowledge_item import KnowledgeItem
 from ..utils import ensure_iso_datetime
+from .knowledge_item import KnowledgeItem
 
 
 @dataclass
