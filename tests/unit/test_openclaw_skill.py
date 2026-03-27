@@ -2,7 +2,12 @@
 
 from unittest.mock import MagicMock
 
+import pytest
+
+from socratic_knowledge.integrations.langchain import HAS_LANGCHAIN
 from socratic_knowledge.integrations.openclaw import SocraticKnowledgeSkill
+
+pytestmark = pytest.mark.skipif(not HAS_LANGCHAIN, reason="langchain not installed")
 
 
 class TestSocraticKnowledgeSkill:

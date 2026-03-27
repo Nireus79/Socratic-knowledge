@@ -59,6 +59,8 @@ dev = [
     "black>=23.0",
     "ruff>=0.1.0",
     "mypy>=1.0",
+    "langchain>=0.1.0",
+    "socratic-rag>=0.1.0",
 ]
 
 [project.urls]

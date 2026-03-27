@@ -2,7 +2,12 @@
 
 from typing import Any, Optional
 
-from langchain.tools import tool
+try:
+    from langchain.tools import tool
+    HAS_LANGCHAIN = True
+except ImportError:
+    HAS_LANGCHAIN = False
+    tool = None  # type: ignore
 
 from ...manager import KnowledgeManager
 
