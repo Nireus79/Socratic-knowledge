@@ -13,6 +13,9 @@ from .core.user import User
 from .core.version import Version
 from .manager import KnowledgeManager
 
+# Alias for backward compatibility and consistent naming
+KnowledgeBase = KnowledgeManager
+
 __version__ = "0.1.0"
 
 __all__ = [
@@ -23,6 +26,7 @@ __all__ = [
     "User",
     "Version",
     # Manager
+    "KnowledgeBase",
     "KnowledgeManager",
     "AsyncKnowledgeManager",
 ]
