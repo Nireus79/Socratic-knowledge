@@ -8,9 +8,10 @@ try:
     HAS_RAG = True
 except ImportError:
     HAS_RAG = False
-    RAGClient = None  # type: ignore
-    RAGConfig = None  # type: ignore
-    SearchResult = None  # type: ignore
+    # Fallback when socratic-rag is not installed - allows code to import but semantic search disabled
+    RAGClient = None  # type: ignore[assignment,misc]
+    RAGConfig = None  # type: ignore[assignment,misc]
+    SearchResult = None  # type: ignore[assignment,misc]
 
 from ..core.knowledge_item import KnowledgeItem
 from ..storage.base import BaseKnowledgeStore

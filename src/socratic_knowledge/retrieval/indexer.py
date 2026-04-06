@@ -1,9 +1,12 @@
 """Automatic indexing of knowledge items for RAG."""
 
+import logging
 from typing import List
 
 from ..core.knowledge_item import KnowledgeItem
 from .rag_integration import KnowledgeRAGIntegration
+
+logger = logging.getLogger(__name__)
 
 
 class KnowledgeIndexer:
@@ -40,9 +43,10 @@ class KnowledgeIndexer:
             try:
                 self.rag.index_item(item)
                 indexed_count += 1
-            except Exception:
-                # Continue indexing others if one fails
-                continue
+            except (ValueError, TypeError, AttributeError) as e:
+                logger.warning(f"Failed to index item '{item.id}': {e}")
+            except Exception as e:
+                logger.error(f"Unexpected error indexing item '{item.id}': {e}", exc_info=True)
 
         return indexed_count
 

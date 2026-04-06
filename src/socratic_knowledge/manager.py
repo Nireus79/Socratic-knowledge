@@ -1,6 +1,9 @@
 """Main KnowledgeManager interface for Socratic Knowledge."""
 
+import logging
 from typing import Any, Dict, List, Optional
+
+logger = logging.getLogger(__name__)
 
 from .access.permissions import AccessControl
 from .access.rbac import Permission, Role
@@ -59,9 +62,11 @@ class KnowledgeManager:
                     storage=self.store,
                     rag_config=rag_config,
                 )
-            except Exception:
-                # RAG not available, semantic search will be disabled
-                pass
+            except (ImportError, ModuleNotFoundError) as e:
+                # RAG dependencies not available, semantic search will be disabled
+                logger.debug(f"RAG integration not available: {e}. Semantic search disabled.")
+            except Exception as e:
+                logger.error(f"Unexpected error initializing RAG integration: {e}", exc_info=True)
 
         # Initialize search engine
         self.search_engine = SearchEngine(self.store, self.rag)

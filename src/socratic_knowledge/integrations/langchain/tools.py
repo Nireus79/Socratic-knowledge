@@ -8,7 +8,8 @@ try:
     HAS_LANGCHAIN = True
 except ImportError:
     HAS_LANGCHAIN = False
-    tool = None  # type: ignore
+    # Fallback when LangChain is not installed - allows code to import but won't work at runtime
+    tool = None  # type: ignore[assignment]
 
 from ...manager import KnowledgeManager
 
