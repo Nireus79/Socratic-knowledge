@@ -12,6 +12,7 @@ from .core.knowledge_item import KnowledgeItem
 from .core.tenant import Tenant
 from .core.user import User
 from .core.version import Version
+from .graph import KnowledgeEdge, KnowledgeGraph, RelationshipType
 from .manager import KnowledgeManager
 
 # Alias for backward compatibility and consistent naming
@@ -34,4 +35,8 @@ __all__ = [
     "BulkOperationManager",
     "BulkOperationResult",
     "TransactionManager",
+    # Knowledge graph
+    "KnowledgeGraph",
+    "KnowledgeEdge",
+    "RelationshipType",
 ]
