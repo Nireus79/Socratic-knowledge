@@ -9,6 +9,7 @@ from .access.permissions import AccessControl
 from .access.rbac import Permission, Role
 from .audit.events import AuditEvent, AuditEventType
 from .audit.logger import AuditLogger
+from .bulk import BulkOperationManager, BulkOperationResult, TransactionManager
 from .collaboration.conflict import Conflict, ConflictDetector
 from .collaboration.locks import OptimisticLockManager
 from .core.collection import Collection
@@ -77,6 +78,10 @@ class KnowledgeManager:
         # Initialize collaboration managers
         self.lock_manager = OptimisticLockManager()
         self.conflict_detector = ConflictDetector()
+
+        # Initialize bulk operations
+        self.bulk_manager = BulkOperationManager(self.store)
+        self.transaction_manager = TransactionManager(self.store)
 
     # ==================== Tenant operations ====================
 
@@ -827,3 +832,125 @@ class KnowledgeManager:
             bool: True if conflicts exist
         """
         return self.conflict_detector.has_conflicts(item_id)
+
+    # ==================== Bulk operations ====================
+
+    def bulk_create_items(
+        self,
+        items: List[KnowledgeItem],
+        auto_index: bool = True,
+    ) -> BulkOperationResult:
+        """
+        Create multiple knowledge items in batches.
+
+        Efficiently creates multiple items with batch processing.
+
+        Args:
+            items: List of KnowledgeItem objects to create
+            auto_index: Auto-index items for RAG if available
+
+        Returns:
+            BulkOperationResult with operation details
+        """
+        return self.bulk_manager.bulk_create_items(items, auto_index=auto_index)
+
+    def bulk_update_items(
+        self,
+        items: List[KnowledgeItem],
+        change_message: str = "",
+        create_versions: bool = True,
+    ) -> BulkOperationResult:
+        """
+        Update multiple knowledge items in batches.
+
+        Optionally creates version snapshots before updating.
+
+        Args:
+            items: List of KnowledgeItem objects to update
+            change_message: Optional change message for versions
+            create_versions: Create version snapshots before updates
+
+        Returns:
+            BulkOperationResult with operation details
+        """
+        return self.bulk_manager.bulk_update_items(
+            items,
+            change_message=change_message,
+            create_versions=create_versions,
+        )
+
+    def bulk_delete_items(
+        self,
+        item_ids: List[str],
+        tenant_id: str,
+        soft: bool = True,
+    ) -> BulkOperationResult:
+        """
+        Delete multiple knowledge items in batches.
+
+        Args:
+            item_ids: List of item IDs to delete
+            tenant_id: Tenant ID (for security)
+            soft: Soft delete (mark deleted) or hard delete
+
+        Returns:
+            BulkOperationResult with operation details
+        """
+        return self.bulk_manager.bulk_delete_items(
+            item_ids,
+            tenant_id=tenant_id,
+            soft=soft,
+        )
+
+    def bulk_index_items(
+        self,
+        items: List[KnowledgeItem],
+    ) -> BulkOperationResult:
+        """
+        Index multiple items for semantic search in batches.
+
+        Args:
+            items: List of KnowledgeItem objects to index
+
+        Returns:
+            BulkOperationResult with operation details
+
+        Raises:
+            ValueError: If RAG integration not available
+        """
+        return self.bulk_manager.bulk_index_items(items, rag_integration=self.rag)
+
+    def bulk_create_collections(
+        self,
+        collections: List[Collection],
+    ) -> BulkOperationResult:
+        """
+        Create multiple collections in batches.
+
+        Args:
+            collections: List of Collection objects to create
+
+        Returns:
+            BulkOperationResult with operation details
+        """
+        return self.bulk_manager.bulk_create_collections(collections)
+
+    def bulk_delete_collections(
+        self,
+        collection_ids: List[str],
+        cascade: bool = False,
+    ) -> BulkOperationResult:
+        """
+        Delete multiple collections in batches.
+
+        Args:
+            collection_ids: List of collection IDs to delete
+            cascade: Delete all items in collections (if True)
+
+        Returns:
+            BulkOperationResult with operation details
+        """
+        return self.bulk_manager.bulk_delete_collections(
+            collection_ids,
+            cascade=cascade,
+        )

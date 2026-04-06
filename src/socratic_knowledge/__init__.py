@@ -6,6 +6,7 @@ and RAG integration.
 """
 
 from .async_manager import AsyncKnowledgeManager
+from .bulk import BulkOperationManager, BulkOperationResult, TransactionManager
 from .core.collection import Collection
 from .core.knowledge_item import KnowledgeItem
 from .core.tenant import Tenant
@@ -29,4 +30,8 @@ __all__ = [
     "KnowledgeBase",
     "KnowledgeManager",
     "AsyncKnowledgeManager",
+    # Bulk operations
+    "BulkOperationManager",
+    "BulkOperationResult",
+    "TransactionManager",
 ]
