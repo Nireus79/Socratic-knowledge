@@ -10,7 +10,6 @@ from .core.tenant import Tenant
 from .core.version import Version
 from .storage.base import BaseKnowledgeStore
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -98,9 +97,7 @@ class BulkOperationManager:
                     result.failed_items.append((item.item_id, error_msg))
                     result.total_failed += 1
                     result.total_processed += 1
-                    self.logger.error(
-                        f"Failed to create item {item.item_id}: {error_msg}"
-                    )
+                    self.logger.error(f"Failed to create item {item.item_id}: {error_msg}")
 
         self.logger.info(
             f"Bulk create completed: {result.total_successful}/{len(items)} successful"
@@ -161,9 +158,7 @@ class BulkOperationManager:
                     result.failed_items.append((item.item_id, error_msg))
                     result.total_failed += 1
                     result.total_processed += 1
-                    self.logger.error(
-                        f"Failed to update item {item.item_id}: {error_msg}"
-                    )
+                    self.logger.error(f"Failed to update item {item.item_id}: {error_msg}")
 
         self.logger.info(
             f"Bulk update completed: {result.total_successful}/{len(items)} successful"
@@ -210,9 +205,7 @@ class BulkOperationManager:
                     if deleted:
                         result.total_successful += 1
                     else:
-                        result.failed_items.append(
-                            (item_id, "Item not found or already deleted")
-                        )
+                        result.failed_items.append((item_id, "Item not found or already deleted"))
                         result.total_failed += 1
 
                     result.total_processed += 1
@@ -222,9 +215,7 @@ class BulkOperationManager:
                     result.failed_items.append((item_id, error_msg))
                     result.total_failed += 1
                     result.total_processed += 1
-                    self.logger.error(
-                        f"Failed to delete item {item_id}: {error_msg}"
-                    )
+                    self.logger.error(f"Failed to delete item {item_id}: {error_msg}")
 
         self.logger.info(
             f"Bulk delete completed: {result.total_successful}/{len(item_ids)} successful"
@@ -379,9 +370,7 @@ class BulkOperationManager:
                     if deleted:
                         result.total_successful += 1
                     else:
-                        result.failed_items.append(
-                            (collection_id, "Collection not found")
-                        )
+                        result.failed_items.append((collection_id, "Collection not found"))
                         result.total_failed += 1
 
                     result.total_processed += 1
@@ -391,9 +380,7 @@ class BulkOperationManager:
                     result.failed_items.append((collection_id, error_msg))
                     result.total_failed += 1
                     result.total_processed += 1
-                    self.logger.error(
-                        f"Failed to delete collection {collection_id}: {error_msg}"
-                    )
+                    self.logger.error(f"Failed to delete collection {collection_id}: {error_msg}")
 
         self.logger.info(
             f"Bulk collection deletion completed: "

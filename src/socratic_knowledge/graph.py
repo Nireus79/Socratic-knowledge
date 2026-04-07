@@ -122,9 +122,7 @@ class KnowledgeGraph:
             self.reverse_index[target_id] = []
         self.reverse_index[target_id].append(edge)
 
-        self.logger.debug(
-            f"Added edge: {source_id} -[{relationship_type.value}]-> {target_id}"
-        )
+        self.logger.debug(f"Added edge: {source_id} -[{relationship_type.value}]-> {target_id}")
 
         return edge
 
@@ -297,9 +295,7 @@ class KnowledgeGraph:
                     if neighbor not in visited:
                         # Calculate relevance score (decreases with distance)
                         relevance = current_score * (1.0 / (level + 2))
-                        next_level[neighbor] = max(
-                            next_level.get(neighbor, 0), relevance
-                        )
+                        next_level[neighbor] = max(next_level.get(neighbor, 0), relevance)
                         visited.add(neighbor)
                         related[neighbor] = relevance
 
@@ -373,9 +369,9 @@ class KnowledgeGraph:
         # Create relationships
         for edge in self.edges:
             lines.append(
-                f'CREATE (n_{edge.source_id})-'
-                f'[:{edge.relationship_type.value.upper()} {{weight: {edge.weight}}}]->'
-                f'(n_{edge.target_id})'
+                f"CREATE (n_{edge.source_id})-"
+                f"[:{edge.relationship_type.value.upper()} {{weight: {edge.weight}}}]->"
+                f"(n_{edge.target_id})"
             )
 
         return ";\n".join(lines) + ";"
