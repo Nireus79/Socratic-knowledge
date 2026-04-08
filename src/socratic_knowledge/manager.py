@@ -3,8 +3,6 @@
 import logging
 from typing import Any, Dict, List, Optional
 
-logger = logging.getLogger(__name__)
-
 from .access.permissions import AccessControl
 from .access.rbac import Permission, Role
 from .audit.events import AuditEvent, AuditEventType
@@ -22,6 +20,8 @@ from .storage.base import BaseKnowledgeStore
 from .storage.sqlite_store import SQLiteKnowledgeStore
 from .versioning.history import VersionHistory
 from .versioning.version_model import VersionInfo
+
+logger = logging.getLogger(__name__)
 
 
 class KnowledgeManager:

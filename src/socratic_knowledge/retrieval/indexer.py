@@ -44,9 +44,9 @@ class KnowledgeIndexer:
                 self.rag.index_item(item)
                 indexed_count += 1
             except (ValueError, TypeError, AttributeError) as e:
-                logger.warning(f"Failed to index item '{item.id}': {e}")
+                logger.warning(f"Failed to index item '{item.item_id}': {e}")
             except Exception as e:
-                logger.error(f"Unexpected error indexing item '{item.id}': {e}", exc_info=True)
+                logger.error(f"Unexpected error indexing item '{item.item_id}': {e}", exc_info=True)
 
         return indexed_count
 

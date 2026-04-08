@@ -39,7 +39,8 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
             conn.execute("PRAGMA foreign_keys = ON")
 
             # Tenants table
-            conn.execute("""
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS tenants (
                     tenant_id TEXT PRIMARY KEY,
                     name TEXT NOT NULL,
@@ -51,10 +52,12 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
                     created_at TEXT NOT NULL,
                     metadata TEXT
                 )
-                """)
+                """
+            )
 
             # Collections table
-            conn.execute("""
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS collections (
                     collection_id TEXT PRIMARY KEY,
                     tenant_id TEXT NOT NULL,
@@ -71,10 +74,12 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
                     FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id),
                     FOREIGN KEY (parent_id) REFERENCES collections(collection_id)
                 )
-                """)
+                """
+            )
 
             # Knowledge items table
-            conn.execute("""
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS knowledge_items (
                     item_id TEXT PRIMARY KEY,
                     tenant_id TEXT NOT NULL,
@@ -96,10 +101,12 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
                     FOREIGN KEY (tenant_id) REFERENCES tenants(tenant_id),
                     FOREIGN KEY (collection_id) REFERENCES collections(collection_id)
                 )
-                """)
+                """
+            )
 
             # Versions table
-            conn.execute("""
+            conn.execute(
+                """
                 CREATE TABLE IF NOT EXISTS versions (
                     version_id TEXT PRIMARY KEY,
                     item_id TEXT NOT NULL,
@@ -112,7 +119,8 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
                     diff_from_previous TEXT,
                     FOREIGN KEY (item_id) REFERENCES knowledge_items(item_id)
                 )
-                """)
+                """
+            )
 
             # Create indexes for performance
             conn.execute(
@@ -134,13 +142,15 @@ class SQLiteKnowledgeStore(BaseKnowledgeStore):
 
             # Full-text search index using FTS5
             try:
-                conn.execute("""
+                conn.execute(
+                    """
                     CREATE VIRTUAL TABLE IF NOT EXISTS knowledge_items_fts USING fts5(
                         title, content, tags,
                         content=knowledge_items,
                         content_rowid=rowid
                     )
-                    """)
+                    """
+                )
             except sqlite3.OperationalError:
                 # FTS5 might not be available in some SQLite builds
                 pass

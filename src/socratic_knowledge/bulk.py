@@ -2,11 +2,10 @@
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from .core.collection import Collection
 from .core.knowledge_item import KnowledgeItem
-from .core.tenant import Tenant
 from .core.version import Version
 from .storage.base import BaseKnowledgeStore
 
@@ -88,7 +87,7 @@ class BulkOperationManager:
 
             for item in batch:
                 try:
-                    created_item = self.store.create_item(item)
+                    self.store.create_item(item)
                     result.total_successful += 1
                     result.total_processed += 1
 
@@ -149,7 +148,7 @@ class BulkOperationManager:
 
                     # Update item
                     item.increment_version()
-                    updated_item = self.store.update_item(item)
+                    self.store.update_item(item)
                     result.total_successful += 1
                     result.total_processed += 1
 
@@ -304,7 +303,7 @@ class BulkOperationManager:
 
             for collection in batch:
                 try:
-                    created_collection = self.store.create_collection(collection)
+                    self.store.create_collection(collection)
                     result.total_successful += 1
                     result.total_processed += 1
 
