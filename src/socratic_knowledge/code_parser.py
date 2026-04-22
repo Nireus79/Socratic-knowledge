@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Code parser for extracting structure from source code files.
 

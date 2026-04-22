@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Default knowledge base for Socrates AI
 """
