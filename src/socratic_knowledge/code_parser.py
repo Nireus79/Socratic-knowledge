@@ -43,7 +43,7 @@ class CodeParser:
     def _get_logger(self):
         """Get or create logger for this component."""
         try:
-            from socratic_system.utils.logger import get_logger
+            # from socratic_system.utils.logger import get_logger  # removed monolith dependency
 
             return get_logger("code_parser")
         except (ImportError, RuntimeError):
