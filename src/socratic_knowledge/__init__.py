@@ -1,42 +1,12 @@
 """
-Socratic Knowledge - Enterprise knowledge management system.
+Socratic Knowledge - Knowledge Base Management
 
-Provides multi-tenant knowledge management with access control, versioning,
-and RAG integration.
+Extracted from Socrates v1.3.3
 """
 
-from .async_manager import AsyncKnowledgeManager
-from .bulk import BulkOperationManager, BulkOperationResult, TransactionManager
-from .core.collection import Collection
-from .core.knowledge_item import KnowledgeItem
-from .core.tenant import Tenant
-from .core.user import User
-from .core.version import Version
-from .graph import KnowledgeEdge, KnowledgeGraph, RelationshipType
-from .manager import KnowledgeManager
+from .knowledge import KnowledgeEntry
+from .knowledge_base import KnowledgeBase
+from .code_parser import CodeParser
 
-# Alias for backward compatibility and consistent naming
-KnowledgeBase = KnowledgeManager
-
-__version__ = "0.1.0"
-
-__all__ = [
-    # Core models
-    "KnowledgeItem",
-    "Collection",
-    "Tenant",
-    "User",
-    "Version",
-    # Manager
-    "KnowledgeBase",
-    "KnowledgeManager",
-    "AsyncKnowledgeManager",
-    # Bulk operations
-    "BulkOperationManager",
-    "BulkOperationResult",
-    "TransactionManager",
-    # Knowledge graph
-    "KnowledgeGraph",
-    "KnowledgeEdge",
-    "RelationshipType",
-]
+__version__ = "1.3.3"
+__all__ = ["KnowledgeEntry", "KnowledgeBase", "CodeParser"]
