@@ -1,193 +1,298 @@
 # socratic-knowledge Architecture
 
-Knowledge management system for organizing and querying domain-specific information
+Enterprise knowledge management system with versioning, access control, and RAG integration.
 
-## System Architecture
+## System Overview
 
-socratic-knowledge provides enterprise-grade knowledge management with semantic understanding, enabling sophisticated queries and reasoning over domain knowledge.
-
-### Component Overview
-
-```
-Knowledge Input
-    |
-    +-- Documents
-    +-- Structured Data
-    +-- External APIs
-    |
-Knowledge Processing
-    |
-    +-- Parser
-    +-- Extractor
-    +-- Normalizer
-    |
-Knowledge Graph
-    |
-    +-- Entity Management
-    +-- Relationship Management
-    +-- Ontology Management
-    |
-Query Engine
-    |
-    +-- Query Parser
-    +-- Query Optimizer
-    +-- Result Ranker
-    |
-Versioning & Control
-    |
-    +-- Version Manager
-    +-- Change Tracker
-    +-- Audit Logger
-```
+socratic-knowledge provides a comprehensive knowledge management platform with:
+- Multi-tenancy support with tenant isolation
+- Fine-grained access control
+- Semantic search with embeddings
+- Version tracking and history
+- Audit logging for compliance
+- RAG (Retrieval Augmented Generation) integration
 
 ## Core Components
 
-### 1. Knowledge Graph
+### 1. Knowledge Entry
 
-**Manages semantic knowledge representation**:
-- Entity definition and management
-- Relationship modeling
-- Property management
-- Graph traversal
-- Semantic reasoning
+Basic unit of knowledge:
+- `entry_id` - Unique identifier
+- `title` - Human-readable title
+- `content` - Knowledge content
+- `category` - Knowledge category
+- `tags` - Search tags
+- `created_by` - Author
+- `created_date` - Creation timestamp
+- `metadata` - Custom metadata
 
-### 2. Ontology
+### 2. Knowledge Base
 
-**Defines domain concepts and relationships**:
-- Concept hierarchies
-- Relationship types
-- Property definitions
-- Cardinality constraints
-- Semantic rules
+Collection of knowledge entries:
+- `kb_id` - Knowledge base identifier
+- `name` - Knowledge base name
+- `entries` - Dict of entry_id -> KnowledgeEntry
+- `metadata` - Base metadata
 
-### 3. Query Engine
+### 3. Data Flow: Items → Versioning → Semantic Search → Audit Log
 
-**Executes knowledge queries**:
-- Parse natural language queries
-- Optimize query execution
-- Traverse knowledge graph
-- Rank results by relevance
-- Return structured results
+```
+Create/Update Knowledge Item
+    |
+    v
+Store in Knowledge Base
+    |
+    v
+Create Version Entry
+    |
+    v
+Index for Semantic Search
+    |
+    v
+Log to Audit Trail
+    |
+    v
+Available for RAG/Retrieval
+```
 
-### 4. Versioning
+### 4. Sub-components
 
-**Manages knowledge base evolution**:
-- Track version history
-- Support version comparison
-- Enable rollback
-- Manage branches
-- Audit all changes
+#### Core Management
+- `KnowledgeEntry` - Individual knowledge units
+- `KnowledgeBase` - Collection management
+- `CodeParser` - Extract knowledge from code
 
-## Data Flow
+#### Versioning
+- Version history tracking
+- Change diffs
+- Rollback capability
+- Branch support
 
-### Knowledge Ingestion Pipeline
-
-1. **Source Acquisition**
-   - Read from data sources
-   - Validate input format
-   - Extract structured data
-
-2. **Processing**
-   - Parse documents
-   - Extract entities and relationships
-   - Normalize representation
-   - Validate against ontology
-
-3. **Integration**
-   - Merge with existing knowledge
-   - Resolve conflicts
-   - Update relationships
-   - Maintain consistency
-
-4. **Storage**
-   - Persist to knowledge graph
-   - Index for querying
-   - Update ontology if needed
-   - Commit transaction
-
-### Query Pipeline
-
-1. **Query Input**
-   - Receive natural language query
-   - Parse query structure
-   - Map to ontology concepts
-
-2. **Query Optimization**
-   - Analyze query complexity
-   - Optimize traversal path
-   - Select appropriate indexes
-   - Estimate result size
-
-3. **Execution**
-   - Traverse knowledge graph
-   - Apply filters and constraints
-   - Aggregate results
-   - Apply ranking
-
-4. **Result Assembly**
-   - Format results
-   - Add metadata
-   - Include provenance
-   - Return to user
-
-## Integration Points
-
-### socrates-nexus
-- Semantic reasoning over knowledge
-- Natural language query understanding
-- Answer generation
-
-### socratic-rag
-- Document integration
-- Knowledge source ingestion
-- Hybrid search (semantic + keyword)
-
-## Knowledge Representation
-
-### Entities
-- Objects in the domain
-- Properties and attributes
-- Type hierarchies
-- Unique identifiers
-
-### Relationships
-- Named connections
-- Directionality
-- Properties
-- Cardinality rules
-
-### Ontology
-- Concept definitions
-- Type hierarchies
-- Relationship semantics
-- Constraint rules
-
-## Query Capabilities
-
+#### Retrieval
+- Semantic search with embeddings
 - Keyword search
-- Semantic search
-- Path queries
-- Pattern matching
-- Aggregation queries
-- Ranked retrieval
+- Faceted search
+- RAG integration
+- Relevance scoring
 
-## Version Control Features
+#### Access Control
+- Tenant isolation
+- Role-based access (RBAC)
+- User permissions
+- Resource-level control
 
-- Branching support
-- Merge capabilities
+#### Audit & Compliance
+- Change tracking
+- User action logging
+- Compliance reports
+- Retention policies
+
+#### Collaboration
+- Multi-user editing
 - Conflict resolution
-- Rollback support
-- Change history
-- Audit trails
+- Change proposals
+- Approval workflows
 
-## Performance Optimization
+## Multi-Tenancy Architecture
 
-- Caching strategies
-- Index optimization
-- Query caching
-- Graph compression
-- Distributed storage
+```
+Socratic Knowledge System
+    |
+    ├-- Tenant A
+    │   ├-- Users
+    │   ├-- Knowledge Base
+    │   ├-- Access Policies
+    │   └-- Audit Log
+    |
+    ├-- Tenant B
+    │   ├-- Users
+    │   ├-- Knowledge Base
+    │   ├-- Access Policies
+    │   └-- Audit Log
+    |
+    └-- Tenant C
+        ├-- Users
+        ├-- Knowledge Base
+        ├-- Access Policies
+        └-- Audit Log
+```
+
+### Tenant Isolation
+
+- **Data Isolation**: Tenant A cannot access Tenant B data
+- **Query Filtering**: All queries auto-filtered by tenant
+- **Index Isolation**: Separate search indexes per tenant
+- **User Isolation**: Users scoped to single tenant
+
+## Component Interaction
+
+### Create → Version → Index → Audit
+
+```
+1. Create Knowledge Entry
+   - KnowledgeBase.add_entry()
+   - Validate content
+   - Assign unique ID
+
+2. Create Version
+   - VersionManager.create_version()
+   - Store full content
+   - Record timestamp
+   - Track author
+
+3. Index for Search
+   - IndexManager.index_entry()
+   - Generate embeddings
+   - Create keyword index
+   - Update facets
+
+4. Log to Audit
+   - AuditLog.log_action()
+   - Record user action
+   - Track changes
+   - Enable compliance
+```
+
+## Semantic Search Pipeline
+
+```
+Query Input
+    |
+    v
+Tokenize & Normalize
+    |
+    v
+Generate Embeddings
+    |
+    v
+Vector Search
+    |
+    +---> Match knowledge entries
+    |
+    v
+Rank Results
+    |
+    +---> By relevance
+    +---> By recency
+    +---> By popularity
+    |
+    v
+Apply Access Control
+    |
+    +---> Filter by user permissions
+    |
+    v
+Return Results
+```
+
+## RAG Integration Points
+
+```
+LLM Query
+    |
+    v
+Semantic Search in Knowledge Base
+    |
+    v
+Retrieve Top-K Relevant Items
+    |
+    v
+Augment LLM Context
+    |
+    v
+Generate Response
+    |
+    v
+Log to Audit Trail
+```
+
+## Versioning Strategy
+
+Tracks all changes:
+- Full content snapshots
+- Change diffs for efficiency
+- Author and timestamp
+- Rollback capability
+- Branch support
+
+## Audit Trail Features
+
+All actions logged:
+- User action (create, read, update, delete)
+- Timestamp
+- User ID
+- Change details
+- IP address (if applicable)
+- Compliance flags
+
+## Access Control Model
+
+### Role-Based Access Control (RBAC)
+- **Admin** - Full access
+- **Editor** - Create/edit entries
+- **Viewer** - Read-only access
+- **Guest** - Limited read access
+
+### Permission Levels
+- Read
+- Create
+- Update
+- Delete
+- Share
+- Export
+
+### Resource-Level Control
+- Grant permissions per knowledge base
+- Grant permissions per entry
+- Inherited permissions from parent
+
+## Storage Backends
+
+Supported database options:
+- SQLite (local development)
+- PostgreSQL (production)
+- MongoDB (document-oriented)
+- Vector stores (for embeddings)
+
+## Performance Characteristics
+
+- **Entry Lookup**: O(1) hash lookup
+- **Search**: O(log n) + vector similarity
+- **Version History**: O(m) where m = versions
+- **Audit Query**: O(log n) indexed timestamp search
+- **Semantic Search**: O(k) for top-k results
+
+## Security Features
+
+- Access control enforcement
+- Data encryption at rest
+- Audit logging for compliance
+- Multi-tenancy isolation
+- User authentication integration
+- Rate limiting (optional)
+
+## Extension Points
+
+### Custom Storage Backends
+```python
+class CustomStorage(BaseStorage):
+    def store(self, entry): pass
+    def retrieve(self, entry_id): pass
+```
+
+### Custom Indexing Strategies
+```python
+class CustomIndexer(BaseIndexer):
+    def index(self, entry): pass
+    def search(self, query): pass
+```
+
+### Custom Access Policies
+```python
+class CustomPolicy(BasePolicy):
+    def can_access(self, user, resource): pass
+```
 
 ---
 
-Part of the Socratic Ecosystem
+Part of the Socratic Ecosystem | Enterprise Knowledge Management | Multi-Tenant
