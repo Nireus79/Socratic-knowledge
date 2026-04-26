@@ -1,10 +1,10 @@
-from __future__ import annotations
-
 """
 Socratic Knowledge - Knowledge Base Management
 
 Extracted from Socrates v1.3.3
 """
+
+from __future__ import annotations
 
 from .code_parser import CodeParser
 from .knowledge import KnowledgeEntry

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 Code parser for extracting structure from source code files.
 
@@ -10,7 +8,10 @@ Supports multiple programming languages and extracts:
 - Module organization
 """
 
+from __future__ import annotations
+
 import ast
+import logging
 import re
 from typing import Any, Dict, List
 
@@ -44,15 +45,8 @@ class CodeParser:
 
     def _get_logger(self):
         """Get or create logger for this component."""
-        try:
-            # from socratic_system.utils.logger import get_logger  # removed monolith dependency
-
-            return get_logger("code_parser")
-        except (ImportError, RuntimeError):
-            # Fallback if logger not available
-            import logging
-
-            return logging.getLogger("code_parser")
+        # Using standard logging module (monolith dependency removed)
+        return logging.getLogger("code_parser")
 
     def parse_file(self, file_path: str, content: str) -> Dict[str, Any]:
         """

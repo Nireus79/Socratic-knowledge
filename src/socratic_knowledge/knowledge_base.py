@@ -1,8 +1,8 @@
-from __future__ import annotations
-
 """
 Default knowledge base for Socrates AI
 """
+
+from __future__ import annotations
 
 DEFAULT_KNOWLEDGE = [
     {

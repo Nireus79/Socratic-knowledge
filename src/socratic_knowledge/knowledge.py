@@ -1,8 +1,8 @@
-from __future__ import annotations
-
 """
 Knowledge entry model for Socrates AI
 """
+
+from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
