@@ -30,26 +30,6 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install -e ".[dev]"
 
-    - name: Debug - Check Black version and config
-      run: |
-        python -m black --version
-        echo "Black configuration:"
-        python -m black --help | grep -A 2 "line-length"
-        echo "File line ending check:"
-        file src/socratic_knowledge/storage/sqlite_store.py
-        echo "Last 5 lines of file:"
-        tail -5 src/socratic_knowledge/storage/sqlite_store.py
-
-    - name: Debug - Show Black diff for sqlite_store.py
-      run: |
-        python -m black --diff --line-length=100 --target-version=py39 --verbose src/socratic_knowledge/storage/sqlite_store.py || true
-
-    - name: Debug - Try auto-fixing with Black
-      run: |
-        python -m black --line-length=100 --target-version=py39 src/socratic_knowledge/storage/sqlite_store.py
-        echo "Checking if file was modified:"
-        git diff src/socratic_knowledge/storage/sqlite_store.py || echo "No changes"
-
     - name: Check formatting with Black
       run: |
         black --check --line-length=100 --target-version=py39 src/socratic_knowledge/ tests/ examples/
