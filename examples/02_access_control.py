@@ -5,8 +5,9 @@ This example demonstrates role-based access control (RBAC)
 and permission management.
 """
 
-from socratic_knowledge import KnowledgeManager
 from socratic_knowledge.access.rbac import Role
+
+from socratic_knowledge import KnowledgeManager
 
 
 def main():
