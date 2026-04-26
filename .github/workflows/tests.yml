@@ -42,7 +42,7 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-        pytest tests/unit/ --ignore=tests/unit/test_sqlite_store.py -v --cov=src/socratic_knowledge --cov-report=xml --cov-report=term
+        pytest tests/ -v --cov=src/socratic_knowledge --cov-report=xml --cov-report=term
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
