@@ -26,3 +26,13 @@ class KnowledgeEntry:
     category: str
     embedding: Optional[List[float]] = None
     metadata: Optional[Dict[str, Any]] = None
+    @staticmethod
+    def from_dict(data: dict) -> "KnowledgeEntry":
+        """Deserialize from dictionary."""
+        return KnowledgeEntry(**data)
+
+    def to_dict(self) -> dict:
+        """Serialize to dictionary."""
+        from dataclasses import asdict
+        return asdict(self)
+
