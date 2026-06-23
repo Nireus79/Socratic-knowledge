@@ -1,25 +1,14 @@
-"""
-Knowledge entry model for Socrates AI
-"""
+"""Knowledge entry model for Socrates AI"""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class KnowledgeEntry:
-    @staticmethod
-    def from_dict(data: dict) -> "KnowledgeEntry":
-        """Deserialize from dictionary."""
-        return KnowledgeEntry(**data)
-
-    def to_dict(self) -> dict:
-        """Serialize to dictionary."""
-        from dataclasses import asdict
-
-        return asdict(self)
+    """Represents a single entry in the knowledge vector database"""
 
     id: str
     content: str
@@ -34,6 +23,4 @@ class KnowledgeEntry:
 
     def to_dict(self) -> dict:
         """Serialize to dictionary."""
-        from dataclasses import asdict
-
         return asdict(self)
