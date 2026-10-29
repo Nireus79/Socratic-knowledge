@@ -7,15 +7,15 @@
 
 ## Why Socratic Knowledge?
 
-Enterprise knowledge management needs multi-tenancy and governance. Socratic Knowledge provides:
+Shared knowledge bases need multi-tenancy and access control. Socratic Knowledge provides:
 
 - **Multi-Tenancy** - Completely isolated knowledge spaces for multiple organizations with tenant-level access control
 - **Access Control** - Role-based permissions (RBAC) with fine-grained control: Viewer, Editor, Admin, Owner
 - **Full Versioning** - Complete history tracking with rollback capabilities for all changes
 - **Semantic Search** - RAG-powered semantic search with embeddings for intelligent retrieval
-- **Audit Logging** - Complete audit trail for compliance, tracking all changes and access patterns
+- **Audit Logging** - Audit trail of changes and access
 
-Enterprise knowledge management system with **multi-tenancy**, **access control**, **versioning**, and **RAG integration**.
+Knowledge management system with **multi-tenancy**, **access control**, **versioning**, and **RAG integration**.
 
 ## Features
 
@@ -25,7 +25,7 @@ Enterprise knowledge management system with **multi-tenancy**, **access control*
 - **📝 Versioning** - Full history tracking with rollback capabilities
 - **🔍 Semantic Search** - RAG-powered semantic search with embeddings
 - **🤝 Collaboration** - Multi-user editing with conflict detection
-- **📋 Audit Logging** - Complete audit trail for compliance
+- **📋 Audit Logging** - Audit trail of changes and access
 - **🔌 Framework Integration** - Works with Openclaw and LangChain
 
 ## Quick Start
@@ -285,7 +285,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - **Total Tests**: 197 tests across 5 phases
 - **Test Coverage**: ~93% (exceeds 75% target)
 - **Supported Python**: 3.9, 3.10, 3.11, 3.12
-- **Quality**: Black 100%, Ruff 0 issues, MyPy 0 errors ✅
 - **CI/CD**: GitHub Actions
 
 ### Implementation Progress
@@ -318,9 +317,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-## Part of Socrates AI Ecosystem
+## Origin
 
-This package is a component of [**Socrates AI**](https://github.com/Nireus79/Socrates), a production-ready platform for building intelligent multi-agent systems with constitutional governance.
+This package comes from the [Socrates](https://github.com/Nireus79/Socrates) research prototype, which is not maintained as a product. Status: alpha. Written by Efthimios Angelopoulos with AI coding assistants (Claude Code); I design, review and test it. Contact: Hermes_creative@proton.me.
 
 ### Use This Package Standalone:
 ```bash
