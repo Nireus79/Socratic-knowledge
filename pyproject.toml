@@ -9,7 +9,7 @@ description = "Enterprise knowledge management system with multi-tenancy, access
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Socratic Knowledge Contributors"}
+    {name = "Efthimios Angelopoulos", email = "Hermes_creative@proton.me"}
 ]
 keywords = [
     "knowledge",
