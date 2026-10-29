@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "socratic-knowledge"
-version = "0.1.7"
-description = "Enterprise knowledge management system with multi-tenancy, access control, versioning, and RAG integration."
+version = "0.1.8"
+description = "Knowledge management with multi-tenancy, access control, versioning and RAG integration."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
