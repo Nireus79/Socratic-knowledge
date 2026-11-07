@@ -4,25 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "socratic-knowledge"
-version = "0.1.9"
-description = "Knowledge management with multi-tenancy, access control, versioning and RAG integration."
+version = "0.1.10"
+description = "Small package extracted from the Socrates prototype: a knowledge entry dataclass, a source-code structure parser and a few default notes (research prototype)."
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
     {name = "Efthimios Angelopoulos", email = "Hermes_creative@proton.me"}
 ]
-keywords = [
-    "knowledge",
-    "management",
-    "multi-tenant",
-    "access-control",
-    "versioning",
-    "rag",
-    "semantic-search",
-    "langchain",
-    "openclaw",
-    "enterprise",
-]
+keywords = ["knowledge", "code-parser", "socratic"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -38,29 +27,15 @@ classifiers = [
 ]
 requires-python = ">=3.9"
 
-dependencies = [
-    "pydantic>=2.0.0",
-]
+dependencies = []
 
 [project.optional-dependencies]
-rag = ["socratic-rag>=0.1.0"]
-openclaw = []
-langchain = ["langchain>=0.1.0"]
-
-all = [
-    "socratic-rag>=0.1.0",
-    "langchain>=0.1.0",
-]
-
 dev = [
     "pytest>=7.0",
-    "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0",
-    "black>=23.0",
+    "black>=23.0,<26",
     "ruff>=0.1.0",
     "mypy>=1.0",
-    "langchain>=0.1.0",
-    "socratic-rag>=0.1.0",
 ]
 
 [project.urls]

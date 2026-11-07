@@ -2,339 +2,60 @@
 
 # Socratic Knowledge
 
-[![Tests](https://github.com/Nireus79/Socratic-knowledge/workflows/Tests/badge.svg)](https://github.com/Nireus79/Socratic-knowledge/actions)
-[![Code Quality](https://github.com/Nireus79/Socratic-knowledge/workflows/Quality/badge.svg)](https://github.com/Nireus79/Socratic-knowledge/actions)
 [![PyPI](https://img.shields.io/pypi/v/socratic-knowledge)](https://pypi.org/project/socratic-knowledge/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Why Socratic Knowledge?
+A small package extracted from the Socrates prototype. It has no dependencies outside the Python standard library.
 
-Shared knowledge bases need multi-tenancy and access control. Socratic Knowledge provides:
+## What is in the package
 
-- **Multi-Tenancy** - Separate knowledge spaces for multiple organizations with tenant-level access control
-- **Access Control** - Role-based permissions (RBAC) with fine-grained control: Viewer, Editor, Admin, Owner
-- **Full Versioning** - Complete history tracking with rollback capabilities for all changes
-- **Semantic Search** - Semantic search with embeddings
-- **Audit Logging** - Audit trail of changes and access
+- `KnowledgeEntry`: a dataclass (`id`, `content`, `category`, `embedding`, `metadata`) with `to_dict()` and `from_dict()`.
+- `CodeParser`: reads the structure of a source file from its text. Python files are parsed with the `ast` module; JavaScript, Java, C and C++ files with regular expressions, so those results are approximate.
+- `DEFAULT_KNOWLEDGE`: a list of five general notes (software architecture, Python practice and similar) that the prototype used as starting entries.
 
-Knowledge management system with **multi-tenancy**, **access control**, **versioning**, and **RAG integration**.
+There is no storage, no search, no access control, no versioning, no multi-tenancy and no audit log. Earlier versions of this README described a `KnowledgeManager` with those features; it does not exist in the code. For vector search over entries like these, see [socratic-rag](https://github.com/Nireus79/Socratic-rag).
 
-## Features
-
-- **📚 Knowledge Organization** - Hierarchical knowledge base with collections and documents
-- **🔐 Multi-Tenancy** - Isolated knowledge spaces for multiple organizations
-- **👥 Access Control** - Role-based permissions (RBAC) with fine-grained control
-- **📝 Versioning** - Full history tracking with rollback capabilities
-- **🔍 Semantic Search** - RAG-powered semantic search with embeddings
-- **🤝 Collaboration** - Multi-user editing with conflict detection
-- **📋 Audit Logging** - Audit trail of changes and access
-- **🔌 Framework Integration** - Works with Openclaw and LangChain
-
-## Quick Start
-
-### Installation
+## Install
 
 ```bash
-# Basic installation
 pip install socratic-knowledge
-
-# With RAG integration
-pip install socratic-knowledge[rag]
-
-# With LangChain integration
-pip install socratic-knowledge[langchain]
-
-# Everything
-pip install socratic-knowledge[all]
 ```
 
-### Simple Example
+## Use
 
 ```python
-from socratic_knowledge import KnowledgeManager
+from socratic_knowledge import CodeParser, KnowledgeEntry
 
-# Create knowledge manager
-km = KnowledgeManager(storage="sqlite", db_path="knowledge.db")
+source = """
+import os
 
-# Create tenant (organization)
-tenant = km.create_tenant(name="Acme Corp", domain="acme.com")
+class Greeter:
+    def hello(self, name):
+        return "hi " + name
 
-# Create collection (folder)
-docs = km.create_collection(
-    tenant_id=tenant.tenant_id,
-    name="Documentation",
-    created_by="user123"
-)
+def main():
+    pass
+"""
 
-# Add knowledge item
-item = km.create_item(
-    tenant_id=tenant.tenant_id,
-    collection_id=docs.collection_id,
-    title="API Guide",
-    content="How to use our API...",
-    created_by="user123",
-    tags=["api", "guide"]
-)
+result = CodeParser().parse_file("greeter.py", source)
+print(result["language"])            # python
+print(result["structure_summary"])   # one-line summary
+print([c["name"] for c in result["classes"]])      # ['Greeter']
+print([f["name"] for f in result["functions"]])    # ['main']
 
-# Search
-results = km.search(tenant_id=tenant.tenant_id, query="API")
-
-# Get item
-retrieved = km.get_item(item.item_id, tenant_id=tenant.tenant_id)
+entry = KnowledgeEntry(id="greeter", content=result["structure_summary"], category="code")
+print(entry.to_dict())
 ```
 
-## Core Concepts
+`parse_file` returns a dictionary with `language`, `file_path`, `functions`, `classes`, `imports`, `structure_summary` and `metrics` (line, function, class and import counts). An unsupported file extension is reported in the result and is not parsed.
 
-### KnowledgeItem
-
-The main entity representing any knowledge artifact (document, note, etc.)
-
-```python
-@dataclass
-class KnowledgeItem:
-    item_id: str                    # UUID
-    tenant_id: str                  # For multi-tenancy
-    collection_id: Optional[str]    # Parent collection
-    title: str
-    content: str
-    content_type: str               # "text", "markdown", "json"
-    version: int
-    created_at: datetime
-    updated_at: datetime
-    created_by: str
-    updated_by: str
-    owner_id: str
-    permissions: Dict[str, List[str]]  # {role: [user_ids]}
-    tags: List[str]
-    metadata: Dict[str, Any]
-```
-
-### Collection
-
-Hierarchical container for organizing knowledge items (like folders)
-
-```python
-@dataclass
-class Collection:
-    collection_id: str
-    tenant_id: str
-    parent_id: Optional[str]        # For hierarchy
-    name: str
-    owner_id: str
-    permissions: Dict[str, List[str]]
-    inherit_permissions: bool       # Inherit ACL from parent
-```
-
-### Tenant
-
-Organization/account for multi-tenancy support
-
-```python
-@dataclass
-class Tenant:
-    tenant_id: str
-    name: str
-    domain: Optional[str]           # e.g., "acme.com"
-    max_storage_mb: int
-    is_active: bool
-```
-
-### Access Control
-
-Role-based permissions (RBAC):
-
-- **VIEWER** - Read only
-- **EDITOR** - Read + Write
-- **ADMIN** - Full access
-- **OWNER** - All permissions
-
-## API Reference
-
-### KnowledgeManager
-
-Main interface for knowledge management operations.
-
-```python
-class KnowledgeManager:
-    # Tenant operations
-    def create_tenant(self, name: str, **kwargs) -> Tenant
-    def get_tenant(self, tenant_id: str) -> Optional[Tenant]
-
-    # Collection operations
-    def create_collection(self, tenant_id: str, name: str, created_by: str,
-                         parent_id: Optional[str] = None) -> Collection
-    def get_collection(self, collection_id: str) -> Optional[Collection]
-    def list_collections(self, tenant_id: str, parent_id: Optional[str] = None) -> List[Collection]
-
-    # Knowledge item operations
-    def create_item(self, tenant_id: str, title: str, content: str,
-                   created_by: str, collection_id: Optional[str] = None,
-                   **kwargs) -> KnowledgeItem
-    def get_item(self, item_id: str, tenant_id: str) -> Optional[KnowledgeItem]
-    def update_item(self, item: KnowledgeItem, change_message: str = "") -> KnowledgeItem
-    def delete_item(self, item_id: str, tenant_id: str, soft: bool = True) -> bool
-    def list_items(self, tenant_id: str, collection_id: Optional[str] = None,
-                  limit: int = 100, offset: int = 0) -> List[KnowledgeItem]
-
-    # Search operations
-    def search(self, tenant_id: str, query: str, limit: int = 10) -> List[KnowledgeItem]
-    def semantic_search(self, tenant_id: str, query: str, top_k: int = 5,
-                       collection_id: Optional[str] = None) -> List[KnowledgeItem]
-
-    # Access control
-    def grant_permission(self, item_id: str, user_id: str, role: Role,
-                        granted_by: str) -> None
-    def can_user_edit(self, user_id: str, item_id: str) -> bool
-
-    # Versioning
-    def get_version_history(self, item_id: str, limit: int = 10) -> List[Version]
-    def rollback_item(self, item_id: str, version_number: int) -> KnowledgeItem
-
-    # Audit
-    def get_audit_log(self, tenant_id: str, limit: int = 100) -> List[Dict[str, Any]]
-```
-
-## Support Development
-
-If you find this package useful, consider supporting development:
-
-- [Become a Sponsor](https://github.com/sponsors/Nireus79) - Get early access to new features
-- [Star on GitHub](https://github.com/Nireus79/Socratic-knowledge) - Shows your appreciation
-- [Report Issues](https://github.com/Nireus79/Socratic-knowledge/issues) - Help improve the package
-
-Your support helps fund development of the entire Socratic ecosystem.
-
-## Examples
-
-See `examples/` directory for complete examples:
-
-- `01_basic_usage.py` - Basic CRUD operations
-- `02_access_control.py` - Role-based permissions
-- `03_versioning.py` - Version history and rollback
-- `04_rag_integration.py` - Semantic search with RAG
-
-## Integrations
-
-### Openclaw
-
-```python
-from socratic_knowledge.integrations.openclaw import SocraticKnowledgeSkill
-
-skill = SocraticKnowledgeSkill(storage="sqlite")
-result = skill.search(tenant_id="org1", query="LLM prompt engineering", top_k=5)
-```
-
-### LangChain
-
-```python
-from socratic_knowledge.integrations.langchain import SocraticKnowledgeTool
-
-tool = SocraticKnowledgeTool(storage="sqlite", enable_rag=True)
-results = tool.semantic_search(
-    tenant_id="org1",
-    query="How to fine-tune models?",
-    top_k=5
-)
-```
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit a pull request
-
-## Testing
+## Tests
 
 ```bash
-# Run tests
-pytest
-
-# With coverage
-pytest --cov=src/socratic_knowledge
-
-# Specific test file
-pytest tests/unit/test_knowledge_item.py -v
-```
-
-## Quality
-
-```bash
-# Format code
-black src/ tests/ examples/
-
-# Lint
-ruff check src/ tests/ examples/
-
-# Type check
-mypy src/socratic_knowledge
+pip install -e ".[dev]"
+python -m pytest tests/
 ```
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## Project Status
-
-**Version**: 0.1.0 (MVP)
-
-### Statistics
-
-- **Supported Python**: 3.9, 3.10, 3.11, 3.12
-- **CI/CD**: GitHub Actions
-
-### Implementation Progress
-
-- Phase 1: Core Foundation ✅ Complete
-- Phase 2: Access Control & Versioning ✅ Complete
-- Phase 3: RAG Integration & Search ✅ Complete
-- Phase 4: Collaboration & Audit ✅ Complete
-- Phase 5: Integrations ✅ Complete
-- Phase 6: Polish & Documentation ✅ Complete
-
-## Support
-
-- 📖 [Documentation](https://github.com/Nireus79/Socratic-knowledge#readme)
-- 🐛 [Issues](https://github.com/Nireus79/Socratic-knowledge/issues)
-- 💬 [Discussions](https://github.com/Nireus79/Socratic-knowledge/discussions)
-
-## Related Projects
-
-- [Socratic Workflow](https://github.com/Nireus79/Socratic-workflow) - Workflow orchestration
-- [Socratic Agents](https://github.com/Nireus79/Socratic-agents) - Multi-agent orchestration
-- [Socratic RAG](https://github.com/Nireus79/Socratic-rag) - Retrieval-augmented generation
-- [Socratic Analyzer](https://github.com/Nireus79/Socratic-analyzer) - Code analysis
-- [Socrates Nexus](https://github.com/Nireus79/socrates-nexus) - Universal LLM client
-
----
-
-**Built with ❤️ by the Socratic Ecosystem**
-
-
----
-
-## Origin
-
-This package comes from the [Socrates](https://github.com/Nireus79/Socrates) research prototype, which is not maintained as a product. Status: alpha. Written by Efthimios Angelopoulos with AI coding assistants (Claude Code); I design, review and test it. Contact: Hermes_creative@proton.me.
-
-### Use This Package Standalone:
-```bash
-pip install socratic-knowledge
-```
-
-### Or As Part of Socrates Platform:
-```bash
-pip install socrates-ai  # the earlier research prototype that uses this package
-```
-
-### Integration Example:
-
-
-### More Information:
-- 📖 [Full Socrates Documentation](https://github.com/Nireus79/Socrates/tree/main/docs)
-- 💬 [Socrates Discussions](https://github.com/Nireus79/Socrates/discussions)
-
----
+MIT. Contact: Hermes_creative@proton.me
