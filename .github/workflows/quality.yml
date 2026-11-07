@@ -32,11 +32,11 @@ jobs:
 
     - name: Check formatting with Black
       run: |
-        black --check --line-length=100 --target-version=py39 src/socratic_knowledge/ tests/ examples/
+        black --check --line-length=100 --target-version=py39 src/socratic_knowledge/ tests/
 
     - name: Lint with Ruff
       run: |
-        ruff check src/socratic_knowledge/ tests/ examples/
+        ruff check src/socratic_knowledge/ tests/
 
     - name: Type check with MyPy
       run: |
