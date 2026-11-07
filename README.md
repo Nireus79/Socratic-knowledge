@@ -11,10 +11,10 @@
 
 Shared knowledge bases need multi-tenancy and access control. Socratic Knowledge provides:
 
-- **Multi-Tenancy** - Completely isolated knowledge spaces for multiple organizations with tenant-level access control
+- **Multi-Tenancy** - Separate knowledge spaces for multiple organizations with tenant-level access control
 - **Access Control** - Role-based permissions (RBAC) with fine-grained control: Viewer, Editor, Admin, Owner
 - **Full Versioning** - Complete history tracking with rollback capabilities for all changes
-- **Semantic Search** - RAG-powered semantic search with embeddings for intelligent retrieval
+- **Semantic Search** - Semantic search with embeddings
 - **Audit Logging** - Audit trail of changes and access
 
 Knowledge management system with **multi-tenancy**, **access control**, **versioning**, and **RAG integration**.
@@ -283,9 +283,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ### Statistics
 
-- **Lines of Code**: ~3,610 (implementation) + ~2,500 (tests)
-- **Total Tests**: 197 tests across 5 phases
-- **Test Coverage**: ~93% (exceeds 75% target)
 - **Supported Python**: 3.9, 3.10, 3.11, 3.12
 - **CI/CD**: GitHub Actions
 
