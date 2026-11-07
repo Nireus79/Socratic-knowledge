@@ -13,6 +13,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: github.event_name == 'release' || github.event.inputs.publish == 'true'
 
     steps:
