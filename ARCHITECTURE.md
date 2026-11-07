@@ -1,6 +1,6 @@
 # socratic-knowledge Architecture
 
-Enterprise knowledge management system with versioning, access control, and RAG integration.
+Knowledge management system with versioning, access control, and RAG integration.
 
 ## System Overview
 
@@ -295,4 +295,4 @@ class CustomPolicy(BasePolicy):
 
 ---
 
-Part of the Socratic Ecosystem | Enterprise Knowledge Management | Multi-Tenant
+Part of the Socratic Ecosystem | Knowledge Management | Multi-Tenant

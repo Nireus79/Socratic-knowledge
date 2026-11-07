@@ -2,7 +2,7 @@
 
 ## System Overview
 
-Socratic Knowledge provides enterprise knowledge management with multi-tenancy, role-based access control, versioning, semantic search, and comprehensive audit logging.
+Socratic Knowledge provides knowledge management with multi-tenancy, role-based access control, versioning, semantic search, and comprehensive audit logging.
 
 ## Core Components
 
